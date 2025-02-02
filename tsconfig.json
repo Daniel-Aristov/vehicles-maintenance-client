@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "*.ts": ["*"]
+    },
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "target": "esnext",
+    "types": ["vite/client"],
+    "module": "esnext",
+    "lib": ["es2016", "dom", "es2020"],
+    "allowJs": true,
+    "outDir": "/dist",
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
