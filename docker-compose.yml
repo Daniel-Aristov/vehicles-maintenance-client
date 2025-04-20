@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  frontend:
+  vehicles-maintenance-frontend:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - '4173:80'
     restart: unless-stopped

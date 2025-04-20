@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { Service } from '@/types/service.types'
-import { getAllServices } from '@/js/services/service.service'
+import { ServiceService } from '@/js/services/service.service'
 
 export const useServicesStore = defineStore('services', {
   state: () => ({
@@ -9,7 +9,7 @@ export const useServicesStore = defineStore('services', {
   actions: {
     async getAllServices() {
       try {
-        const data = await getAllServices()
+        const data = await ServiceService.getAllServices()
         this.services = data
       } catch (error) {
         console.log(error)
