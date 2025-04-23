@@ -1,37 +1,30 @@
 <template>
   <div class="register-form">
-    <p class="register-form__title">Регистрация</p>
+    <p class="register-form__title">Создание автосервиса</p>
     <form @submit.prevent="onSubmit">
       <div class="input-wrapper">
-        <input type="text" placeholder="Имя" v-model="firstName" />
+        <input
+          type="text"
+          placeholder="Название сервиса"
+          v-model="nameService"
+        />
         <span class="required">*</span>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Фамилия" v-model="lastName" />
+        <input type="text" placeholder="Адрес сервиса" v-model="address" />
         <span class="required">*</span>
       </div>
-      <input type="text" placeholder="Отчество" v-model="patronymic" />
+      <input type="text" placeholder="Описание сервиса" v-model="summary" />
       <div class="input-wrapper">
-        <input type="email" placeholder="Email" v-model="email" />
+        <input type="email" placeholder="Время работы" v-model="timetable" />
         <span class="required">*</span>
       </div>
-      <div class="input-wrapper">
-        <input type="password" placeholder="Пароль" v-model="password" />
-        <span class="required">*</span>
-      </div>
-      <div class="input-wrapper">
-        <input type="date" placeholder="Дата рождения" v-model="birthday" />
-        <span class="required required-date">*</span>
-      </div>
-      <div class="input-wrapper">
-        <input type="tel" placeholder="Телефон" v-model="phone" />
-        <span class="required">*</span>
-      </div>
+      <input type="password" placeholder="Сайт сервиса" v-model="website" />
       <p v-if="error" class="form-error">{{ error }}</p>
-      <button type="submit" :disabled="!isFormValid">Зарегистрироваться</button>
+      <button type="submit" :disabled="!isFormValid">Создать автосервис</button>
     </form>
     <router-link to="/login" class="register-form__link"
-      >Уже есть аккаунт? Войдите</router-link
+      >Уже есть автосервис? Войдите</router-link
     >
   </div>
 </template>
@@ -47,38 +40,26 @@ export default defineComponent({
     }
   },
   data: () => ({
-    firstName: '',
-    lastName: '',
-    patronymic: '',
-    email: '',
-    password: '',
-    birthday: '',
-    phone: ''
+    nameService: '',
+    address: '',
+    summary: '',
+    timetable: '',
+    website: ''
   }),
   computed: {
     isFormValid(): boolean {
-      return !!(
-        this.firstName &&
-        this.lastName &&
-        this.email &&
-        this.password &&
-        this.birthday &&
-        this.phone
-      )
+      return !!(this.nameService && this.address && this.timetable)
     }
   },
   emits: ['submit'],
   methods: {
     onSubmit() {
       this.$emit('submit', {
-        first_name: this.firstName,
-        last_name: this.lastName,
-        patronymic: this.patronymic,
-        email: this.email,
-        password: this.password,
-        birthday: this.birthday,
-        phone: this.phone,
-        role_id: 1
+        name: this.nameService,
+        address: this.address,
+        summary: this.summary,
+        timetable: this.timetable,
+        website: this.website
       })
     }
   }
@@ -89,7 +70,7 @@ export default defineComponent({
 .register-form {
   width: 400px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 40px;
   box-shadow: 0 0 8px 0 rgba(140, 4, 230, 0.2);
   border-radius: 6px;
 }

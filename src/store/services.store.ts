@@ -1,18 +1,22 @@
 import { defineStore } from 'pinia'
 import { Service } from '@/types/service.types'
 import { ServiceService } from '@/js/services/service.service'
+import { CreateServiceDto } from '@/js/models/services.dto'
 
 export const useServicesStore = defineStore('services', {
   state: () => ({
-    services: [] as Service[]
+    currentService: null as Service | null
   }),
+  getters: {
+    getCurrentService: (state) => state.currentService
+  },
   actions: {
-    async getAllServices() {
+    async createService(createServiceData: CreateServiceDto) {
       try {
-        const data = await ServiceService.getAllServices()
-        this.services = data
+        const data = await ServiceService.createService(createServiceData)
+        this.currentService = data
       } catch (error) {
-        console.log(error)
+        throw new Error('Произошла ошибка при создании автосервиса')
       }
     }
   }

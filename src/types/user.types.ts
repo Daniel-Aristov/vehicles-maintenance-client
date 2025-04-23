@@ -8,5 +8,19 @@ export interface User {
   birthday: string
   phone: string
   email: string
-  role_id: number
+  roles: string[]
+}
+
+export enum UserRole {
+  OWNER,
+  WORKER,
+  MANAGER,
+  ADMIN
+}
+
+export const USER_ROLE_NAMES: Record<UserRole, string> = {
+  [UserRole.OWNER]: 'owner',
+  [UserRole.WORKER]: 'worker',
+  [UserRole.MANAGER]: 'manager',
+  [UserRole.ADMIN]: 'admin'
 }

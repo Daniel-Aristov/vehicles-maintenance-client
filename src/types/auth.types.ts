@@ -11,5 +11,5 @@ export interface RegisterData {
   phone: string
   email: string
   password: string
-  role_id: number
+  role: string
 }

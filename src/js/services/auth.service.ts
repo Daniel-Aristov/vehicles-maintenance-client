@@ -6,7 +6,6 @@ import {
   LoginRequest,
   RegisterRequest
 } from '@/js/models/auth.dto'
-import { UserResponse } from '@/js/models/user.dto'
 
 const API_URL = '/auth'
 
@@ -66,21 +65,6 @@ export class AuthService {
     } catch (error) {
       console.error('Произошла ошибка при обновлении токена:', error)
       throw new Error('Произошла ошибка при обновлении токена')
-    }
-  }
-
-  static async getCurrentUser() {
-    try {
-      const response = await axiosInstance.get<UserResponse>(`${API_URL}/me`)
-      return response.data
-    } catch (error) {
-      console.error(
-        'Произошла ошибка при получении информации о пользователе:',
-        error
-      )
-      throw new Error(
-        'Произошла ошибка при получении информации о пользователе'
-      )
     }
   }
 }

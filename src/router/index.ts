@@ -1,5 +1,6 @@
 import { isAuthenticated } from '@/js/helpers/auth.helper'
-import AuthView from '@/views/AuthView.vue'
+import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -13,13 +14,13 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: AuthView,
+      component: LoginView,
       meta: { requiresAuth: false }
     },
     {
       path: '/register',
       name: 'register',
-      component: AuthView,
+      component: RegisterView,
       meta: { requiresAuth: false }
     },
     {

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { AuthService } from '@/js/services/auth.service'
+import { UserService } from '@/js/services/user.service'
 import { User } from '@/types/user.types'
+import { UpdateUserDto } from '@/js/models/user.dto'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -8,8 +9,12 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getCurrentUser() {
-      const user = await AuthService.getCurrentUser()
+      const user = await UserService.getCurrentUser()
       this.user = user
+    },
+    async updateCurrentUser(userUpdateData: UpdateUserDto) {
+      const updatedUser = await UserService.updateCurrentUser(userUpdateData)
+      this.user = updatedUser
     }
   }
 })

@@ -8,7 +8,7 @@
       <button type="submit" :disabled="!isFormValid">Войти</button>
     </form>
     <router-link to="/register" class="login-form__link"
-      >Нет аккаунта? Зарегистрируйтесь</router-link
+      >Нет учетной записи? Зарегистрируйтесь</router-link
     >
   </div>
 </template>
@@ -48,7 +48,7 @@ export default defineComponent({
 .login-form {
   width: 400px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 40px;
   box-shadow: 0 0 8px 0 rgba(140, 4, 230, 0.2);
   border-radius: 6px;
 }

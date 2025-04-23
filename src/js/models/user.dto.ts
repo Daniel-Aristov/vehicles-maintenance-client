@@ -8,5 +8,13 @@ export interface UserResponse {
   birthday: string
   phone: string
   email: string
-  role_id: number
+  roles: string[]
+}
+
+export interface UpdateUserDto {
+  last_name?: string | null
+  first_name?: string | null
+  patronymic?: string | null
+  birthday?: string | null
+  phone?: string | null
 }
