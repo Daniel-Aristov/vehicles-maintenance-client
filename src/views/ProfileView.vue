@@ -62,6 +62,13 @@
             {{ formatRoles(currentUser?.roles) }}
           </p>
         </div>
+        <button
+          v-if="currentUser?.roles.includes('manager')"
+          class="profile-view__card-body-button"
+          @click="goToServices"
+        >
+          Перейти к сервисам
+        </button>
       </div>
     </div>
     <EditProfileModal
@@ -109,6 +116,9 @@ export default defineComponent({
     formatRoles(roles?: string[]): string {
       if (!roles?.length) return 'Не указано'
       return roles.join(', ')
+    },
+    goToServices() {
+      this.$router.push('/services')
     }
   }
 })

@@ -16,8 +16,9 @@ export class AuthService {
         `${API_URL}/login`,
         data
       )
-      console.log(response.data.access_token)
-      setUserTokens(response.data.access_token)
+
+      setUserTokens(response.data.access_token, response.data.refresh_token)
+
       return response.data
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
@@ -35,7 +36,9 @@ export class AuthService {
         `${API_URL}/register`,
         data
       )
-      setUserTokens(response.data.access_token)
+
+      setUserTokens(response.data.access_token, response.data.refresh_token)
+
       return response.data
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
@@ -60,7 +63,9 @@ export class AuthService {
       const response = await axiosInstance.post<AuthResponse>(
         `${API_URL}/refresh`
       )
-      setUserTokens(response.data.access_token)
+
+      setUserTokens(response.data.access_token, response.data.refresh_token)
+
       return response.data
     } catch (error) {
       console.error('Произошла ошибка при обновлении токена:', error)

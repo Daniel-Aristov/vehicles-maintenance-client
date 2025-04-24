@@ -2,6 +2,7 @@ import { isAuthenticated } from '@/js/helpers/auth.helper'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import ServiceView from '@/views/ServiceView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -27,6 +28,12 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/services',
+      name: 'services',
+      component: ServiceView,
       meta: { requiresAuth: true }
     }
   ]

@@ -17,6 +17,9 @@ export function getUserTokens(): userTokens {
 
     if (Cookies.get('access_token')) Cookies.remove('access_token')
     Cookies.set('access_token', currentTokens.accessToken)
+
+    if (Cookies.get('refresh_token')) Cookies.remove('refresh_token')
+    Cookies.set('refresh_token', currentTokens.refreshToken)
   }
   return currentTokens
 }
@@ -28,19 +31,22 @@ export function removeUserTokens() {
   }
 
   localStorage.removeItem('access_token')
+  localStorage.removeItem('refresh_token')
+
   Cookies.remove('access_token')
+  Cookies.remove('refresh_token')
 
   delete axiosInstance.defaults.headers.common['Authorization']
 }
 
-export function setUserTokens(userToken: string) {
-  if (!userToken) {
+export function setUserTokens(accessToken: string, refreshToken: string) {
+  if (!accessToken) {
     return removeUserTokens()
   }
 
   currentTokens = {
-    accessToken: userToken,
-    refreshToken: ''
+    accessToken: accessToken,
+    refreshToken: refreshToken
   }
 
   localStorage.setItem('access_token', currentTokens.accessToken)
@@ -48,6 +54,9 @@ export function setUserTokens(userToken: string) {
 
   if (Cookies.get('access_token')) Cookies.remove('access_token')
   Cookies.set('access_token', currentTokens.accessToken)
+
+  if (Cookies.get('refresh_token')) Cookies.remove('refresh_token')
+  Cookies.set('refresh_token', currentTokens.refreshToken)
 
   axiosInstance.defaults.headers.common[
     'Authorization'

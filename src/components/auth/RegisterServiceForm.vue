@@ -40,11 +40,11 @@ export default defineComponent({
     }
   },
   data: () => ({
-    nameService: '',
-    address: '',
-    summary: '',
-    timetable: '',
-    website: ''
+    nameService: null as string | null,
+    address: null as string | null,
+    summary: null as string | null,
+    timetable: null as string | null,
+    website: null as string | null
   }),
   computed: {
     isFormValid(): boolean {

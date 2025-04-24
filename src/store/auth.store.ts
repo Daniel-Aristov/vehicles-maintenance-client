@@ -18,7 +18,6 @@ export const useAuthStore = defineStore('auth', {
     async register(data: RegisterData) {
       try {
         await AuthService.register(data)
-        router.push('/profile')
       } catch (error) {
         throw error instanceof Error
           ? error

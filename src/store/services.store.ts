@@ -5,18 +5,39 @@ import { CreateServiceDto } from '@/js/models/services.dto'
 
 export const useServicesStore = defineStore('services', {
   state: () => ({
-    currentService: null as Service | null
+    currentServicesByManager: [] as Service[],
+    allServices: [] as Service[]
   }),
   getters: {
-    getCurrentService: (state) => state.currentService
+    getCurrentServicesByManager: (state) => state.currentServicesByManager,
+    getAllServices: (state) => state.allServices
   },
   actions: {
     async createService(createServiceData: CreateServiceDto) {
       try {
         const data = await ServiceService.createService(createServiceData)
-        this.currentService = data
+        this.createServiceLocal(data)
       } catch (error) {
         throw new Error('Произошла ошибка при создании автосервиса')
+      }
+    },
+    createServiceLocal(service: Service) {
+      this.currentServicesByManager.push(service)
+    },
+    async getServices() {
+      try {
+        const data = await ServiceService.getServices()
+        this.allServices = data
+      } catch (error) {
+        throw new Error('Произошла ошибка при получении автосервисов')
+      }
+    },
+    async getServicesByCurrentManager() {
+      try {
+        const data = await ServiceService.getServicesByCurrentManager()
+        this.currentServicesByManager = data
+      } catch (error) {
+        throw new Error('Произошла ошибка при получении автосервисов')
       }
     }
   }

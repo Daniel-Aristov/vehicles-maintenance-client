@@ -16,4 +16,5 @@ export interface CreateServiceData {
   summary: string | null
   timetable: string
   website: string | null
+  manager_id: number
 }
