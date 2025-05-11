@@ -1,11 +1,11 @@
 import { removeUserTokens, setUserTokens } from '@/js/helpers/auth.helper'
-import axiosInstance from '@/js/plugins/axios'
-import { AxiosError } from 'axios'
 import {
   AuthResponse,
   LoginRequest,
   RegisterRequest
 } from '@/js/models/auth.dto'
+import axiosInstance from '@/js/plugins/axios'
+import { AxiosError } from 'axios'
 
 const API_URL = '/auth'
 
@@ -54,21 +54,25 @@ export class AuthService {
     try {
       removeUserTokens()
     } catch (error) {
-      console.error('Произошла ошибка при выходе:', error)
+      throw new Error('Произошла ошибка при выходе')
     }
   }
 
   static async refreshToken() {
     try {
       const response = await axiosInstance.post<AuthResponse>(
-        `${API_URL}/refresh`
+        `${API_URL}/refresh-access-token`
       )
 
-      setUserTokens(response.data.access_token, response.data.refresh_token)
+      setUserTokens(response.data.access_token)
 
       return response.data
     } catch (error) {
-      console.error('Произошла ошибка при обновлении токена:', error)
+      if (error instanceof AxiosError && error.response) {
+        if (error.response.status === 401) {
+          throw new Error('Токен обновления недействителен')
+        }
+      }
       throw new Error('Произошла ошибка при обновлении токена')
     }
   }

@@ -102,7 +102,7 @@ export default defineComponent({
         first_name: this.firstName,
         last_name: this.lastName,
         patronymic: this.patronymic,
-        email: this.email,
+        email: this.email?.toLowerCase(),
         password: this.password,
         birthday: this.birthday,
         phone: this.phone,

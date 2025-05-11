@@ -36,7 +36,7 @@ export default defineComponent({
   methods: {
     onSubmit() {
       this.$emit('submit', {
-        email: this.email,
+        email: this.email.toLowerCase(),
         password: this.password
       })
     }

@@ -39,14 +39,16 @@ export function removeUserTokens() {
   delete axiosInstance.defaults.headers.common['Authorization']
 }
 
-export function setUserTokens(accessToken: string, refreshToken: string) {
+export function setUserTokens(accessToken: string, refreshToken?: string) {
   if (!accessToken) {
     return removeUserTokens()
   }
 
+  const currentRefreshToken = getUserTokens().refreshToken
+
   currentTokens = {
     accessToken: accessToken,
-    refreshToken: refreshToken
+    refreshToken: refreshToken || currentRefreshToken
   }
 
   localStorage.setItem('access_token', currentTokens.accessToken)
