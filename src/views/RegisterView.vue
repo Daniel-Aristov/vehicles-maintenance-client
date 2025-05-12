@@ -6,8 +6,9 @@
     />
     <RegisterAccountForm
       v-if="
-        selectedEntity === 'account' ||
-        (selectedEntity === 'service' && !managerId)
+        !registrationSuccess &&
+        (selectedEntity === 'account' ||
+          (selectedEntity === 'service' && !managerId))
       "
       :create-user-role="createUserRoleName"
       @submit="handleRegister"
@@ -18,6 +19,7 @@
       @submit="handleRegisterService"
       :error="error"
     />
+    <RegistrationEmailConfirm v-if="registrationSuccess" :email="userEmail" />
   </div>
 </template>
 
@@ -30,6 +32,7 @@ import { useUserStore } from '@/store/user.store'
 import RegisterAccountForm from '@/components/auth/RegisterAccountForm.vue'
 import RegisterServiceForm from '@/components/auth/RegisterServiceForm.vue'
 import ChoiceRegisterEntity from '@/components/auth/ChoiceRegisterEntity.vue'
+import RegistrationEmailConfirm from '@/components/auth/RegistrationEmailConfirm.vue'
 import { RegisterData } from '@/types/auth.types'
 import { USER_ROLE_NAMES, UserRole } from '@/types/user.types'
 import { CreateServiceData } from '@/types/service.types'
@@ -38,13 +41,16 @@ export default defineComponent({
   components: {
     RegisterAccountForm,
     RegisterServiceForm,
-    ChoiceRegisterEntity
+    ChoiceRegisterEntity,
+    RegistrationEmailConfirm
   },
   data: () => ({
     error: '',
     selectedEntity: null as 'account' | 'service' | null,
     createUserRole: UserRole.OWNER,
-    managerId: null as number | null
+    managerId: null as number | null,
+    registrationSuccess: false,
+    userEmail: ''
   }),
   mounted() {
     this.error = ''
@@ -67,12 +73,12 @@ export default defineComponent({
       try {
         await this.authStore.register(data)
         this.error = ''
-        await this.userStore.getCurrentUser()
+        this.userEmail = data.email
 
         if (this.selectedEntity === 'service') {
           this.managerId = this.userStore.user?.id ?? null
         } else {
-          this.$router.push('/profile')
+          this.registrationSuccess = true
         }
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Произошла ошибка'
