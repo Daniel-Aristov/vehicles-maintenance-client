@@ -20,7 +20,16 @@
           :src="`http://localhost:8000${currentUser?.photo_path}`"
           alt="profile"
         />
-        <div class="profile-content__avatar-change">Изменить</div>
+        <div class="profile-content__avatar-change" @click="triggerFileInput">
+          Изменить
+        </div>
+        <input
+          type="file"
+          ref="fileInput"
+          accept="image/*"
+          class="hidden-input"
+          @change="handleFileUpload"
+        />
       </div>
       <div class="profile-view__card-body">
         <div class="profile-view__card-body-item">
@@ -124,7 +133,8 @@ export default defineComponent({
     PasswordIcon
   },
   data: () => ({
-    showModalEditProfile: false
+    showModalEditProfile: false,
+    isUploading: false
   }),
   props: {},
   emits: [],
@@ -147,6 +157,25 @@ export default defineComponent({
     },
     goToServices() {
       this.$router.push('/services')
+    },
+    triggerFileInput() {
+      ;(this.$refs.fileInput as HTMLInputElement).click()
+    },
+    async handleFileUpload(event: Event) {
+      const file = (event.target as HTMLInputElement).files?.[0]
+      if (!file) return
+
+      const formData = new FormData()
+      formData.append('photo', file)
+
+      try {
+        this.isUploading = true
+      } catch (error) {
+        console.error('Ошибка при загрузке фото:', error)
+      } finally {
+        this.isUploading = false
+        ;(event.target as HTMLInputElement).value = ''
+      }
     }
   }
 })
@@ -253,5 +282,9 @@ export default defineComponent({
 .profile-view__buttons {
   display: flex;
   gap: 10px;
+}
+
+.hidden-input {
+  display: none;
 }
 </style>
