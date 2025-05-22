@@ -15,6 +15,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapStores } from 'pinia'
+import { useServicesStore } from '@/store/services.store'
 
 export default defineComponent({
   components: {},
@@ -22,7 +23,7 @@ export default defineComponent({
   props: {},
   emits: [],
   computed: {
-    ...mapStores([])
+    ...mapStores(useServicesStore)
   },
   methods: {}
 })

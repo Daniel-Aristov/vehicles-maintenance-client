@@ -1,6 +1,5 @@
 <template>
   <div class="register-form">
-    <p class="register-form__title">Создание автосервиса</p>
     <form @submit.prevent="onSubmit">
       <div class="input-wrapper">
         <input
@@ -11,26 +10,56 @@
         <span class="required">*</span>
       </div>
       <div class="input-wrapper">
+        <div class="inn-verify-wrapper">
+          <input type="text" placeholder="ИНН" v-model="inn" />
+          <button
+            type="button"
+            class="verify-btn"
+            @click="verifyService"
+            :disabled="!inn || loadingVerify"
+          >
+            <span v-if="loadingVerify">Верификация...</span>
+            <span v-else>Верифицировать</span>
+          </button>
+        </div>
+      </div>
+      <div class="input-wrapper">
+        <input
+          type="text"
+          placeholder="Коммерческое название (автоматически)"
+          disabled
+          v-model="commercial_name"
+        />
+        <span class="required">*</span>
+      </div>
+      <div class="input-wrapper">
+        <input
+          type="text"
+          placeholder="ОГРН (автоматически)"
+          disabled
+          v-model="ogrn"
+        />
+        <span class="required">*</span>
+      </div>
+      <div class="input-wrapper">
         <input type="text" placeholder="Адрес сервиса" v-model="address" />
         <span class="required">*</span>
       </div>
       <input type="text" placeholder="Описание сервиса" v-model="summary" />
       <div class="input-wrapper">
-        <input type="email" placeholder="Время работы" v-model="timetable" />
+        <input type="text" placeholder="Время работы" v-model="timetable" />
         <span class="required">*</span>
       </div>
       <input type="password" placeholder="Сайт сервиса" v-model="website" />
       <p v-if="error" class="form-error">{{ error }}</p>
       <button type="submit" :disabled="!isFormValid">Создать автосервис</button>
     </form>
-    <router-link to="/login" class="register-form__link"
-      >Уже есть автосервис? Войдите</router-link
-    >
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useServicesStore } from '@/store/services.store'
 
 export default defineComponent({
   props: {
@@ -41,21 +70,48 @@ export default defineComponent({
   },
   data: () => ({
     nameService: null as string | null,
+    commercial_name: null as string | null,
+    inn: null as string | null,
+    ogrn: null as string | null,
     address: null as string | null,
     summary: null as string | null,
     timetable: null as string | null,
-    website: null as string | null
+    website: null as string | null,
+    loadingVerify: false as boolean
   }),
   computed: {
     isFormValid(): boolean {
-      return !!(this.nameService && this.address && this.timetable)
+      return !!(
+        this.nameService &&
+        this.inn &&
+        this.address &&
+        this.timetable &&
+        this.commercial_name &&
+        this.ogrn
+      )
     }
   },
   emits: ['submit'],
   methods: {
+    async verifyService() {
+      try {
+        this.loadingVerify = true
+        const servicesStore = useServicesStore()
+        const verifyData = await servicesStore.verifyInnOgrn({ inn: this.inn })
+        this.commercial_name = verifyData.name
+        this.ogrn = verifyData.ogrn
+      } catch (error) {
+        console.error('Ошибка верификации:', error)
+      } finally {
+        this.loadingVerify = false
+      }
+    },
     onSubmit() {
       this.$emit('submit', {
         name: this.nameService,
+        commercial_name: this.commercial_name,
+        inn: this.inn,
+        ogrn: this.ogrn,
         address: this.address,
         summary: this.summary,
         timetable: this.timetable,
@@ -68,33 +124,7 @@ export default defineComponent({
 
 <style scoped>
 .register-form {
-  width: 400px;
-  margin: 0 auto;
-  padding: 40px;
-  box-shadow: 0 0 8px 0 rgba(140, 4, 230, 0.2);
-  border-radius: 6px;
-}
-
-.register-form__title {
-  text-align: center;
-  font-size: 22px;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.register-form__link {
-  display: block;
-  font-size: 16px;
-  text-align: center;
-  margin-top: 20px;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-  cursor: pointer;
-  &:hover {
-    color: #d0d0d0;
-  }
+  width: 700px;
 }
 
 .form-error {
@@ -122,8 +152,23 @@ export default defineComponent({
   right: 34px;
 }
 
+button {
+  width: 100%;
+}
+
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.inn-verify-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.verify-btn {
+  width: 240px;
+  height: 47px;
+  white-space: nowrap;
 }
 </style>

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Service } from '@/types/service.types'
+import { Service, VerifyInnOgrnData } from '@/types/service.types'
 import { ServiceService } from '@/js/services/service.service'
 import { CreateServiceDto } from '@/js/models/services.dto'
 
@@ -38,6 +38,14 @@ export const useServicesStore = defineStore('services', {
         this.currentServicesByManager = data
       } catch (error) {
         throw new Error('Произошла ошибка при получении автосервисов')
+      }
+    },
+    async verifyInnOgrn(data: VerifyInnOgrnData) {
+      try {
+        const verifyData = await ServiceService.verifyInnOgrn(data)
+        return verifyData
+      } catch (error) {
+        throw new Error('Произошла ошибка при проверке ИНН и ОГРН')
       }
     }
   }

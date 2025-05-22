@@ -7,10 +7,18 @@
       </div>
       <div class="header__buttons">
         <button
+          v-if="!isCreateRoute"
           class="header__button"
           @click="$router.push('/services/create')"
         >
           Зарегистрировать сервис
+        </button>
+        <button
+          v-else
+          class="header__button"
+          @click="$router.push('/services')"
+        >
+          Вернуться к сервисам
         </button>
       </div>
     </div>
@@ -20,6 +28,11 @@
 
 <script setup lang="ts">
 import ServiceIcon from '@/components/icons/ServiceIcon.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const isCreateRoute = computed(() => route.path.includes('create'))
 </script>
 
 <style scoped>

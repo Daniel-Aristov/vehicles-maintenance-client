@@ -28,20 +28,37 @@ import { useUserStore } from '@/store/user.store'
 import { useRouter } from 'vue-router'
 import GarageIcon from '@/components/icons/GarageIcon.vue'
 import ServiceIcon from '@/components/icons/ServiceIcon.vue'
+import { isAuthenticated } from '@/js/helpers/auth.helper'
 
 const userStore = useUserStore()
 const router = useRouter()
 
-const goToProfile = () => {
-  router.push({ name: 'profile' })
+const goToProfile = async () => {
+  try {
+    if (!isAuthenticated()) {
+      await router.push('/login')
+      return
+    }
+    await router.push('/profile')
+  } catch (error) {
+    console.error('Ошибка при переходе в профиль:', error)
+  }
 }
 
-const goToGarage = () => {
-  router.push({ name: 'vehicles' })
+const goToGarage = async () => {
+  try {
+    await router.push('/vehicles')
+  } catch (error) {
+    console.error('Ошибка при переходе в гараж:', error)
+  }
 }
 
-const goToServices = () => {
-  router.push({ name: 'services' })
+const goToServices = async () => {
+  try {
+    await router.push('/services')
+  } catch (error) {
+    console.error('Ошибка при переходе в сервисы:', error)
+  }
 }
 </script>
 

@@ -8,13 +8,23 @@ export interface Service {
   summary: string | null
   timetable: string
   website: string | null
+  commercial_name: string
+  inn: string
+  ogrn: string
 }
 
 export interface CreateServiceData {
   name: string
+  commercial_name: string
+  inn: string
+  ogrn: string
   address: string
   summary: string | null
   timetable: string
   website: string | null
   manager_id: number
+}
+
+export interface VerifyInnOgrnData {
+  inn: string
 }

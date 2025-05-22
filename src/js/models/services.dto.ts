@@ -8,13 +8,29 @@ export class ServiceResponse {
   summary: string | null
   timetable: string
   website: string | null
+  commercial_name: string
+  inn: string
+  ogrn: string
 }
 
 export class CreateServiceDto {
   name: string
+  commercial_name: string
+  inn: string
+  ogrn: string
   address: string
   summary: string | null
   timetable: string
   website: string | null
   manager_id: number
+}
+
+export class VerifyInnOgrnResponse {
+  name: string
+  ogrn: string
+  is_working: boolean
+}
+
+export class VerifyInnOgrnDto {
+  inn: string
 }

@@ -1,5 +1,10 @@
 import axiosInstance from '@/js/plugins/axios'
-import { CreateServiceDto, ServiceResponse } from '@/js/models/services.dto'
+import {
+  CreateServiceDto,
+  ServiceResponse,
+  VerifyInnOgrnDto,
+  VerifyInnOgrnResponse
+} from '@/js/models/services.dto'
 
 const API_URL = '/services'
 
@@ -27,7 +32,7 @@ export class ServiceService {
   static async getServicesByCurrentManager() {
     try {
       const response = await axiosInstance.get<ServiceResponse[]>(
-        `users/me${API_URL}`
+        `${API_URL}/me`
       )
       return response.data
     } catch (error) {
@@ -38,12 +43,24 @@ export class ServiceService {
   static async createService(CreateServiceData: CreateServiceDto) {
     try {
       const response = await axiosInstance.post<ServiceResponse>(
-        `users/me${API_URL}`,
+        `${API_URL}`,
         CreateServiceData
       )
       return response.data
     } catch (error) {
       throw new Error('Произошла ошибка при создании автосервиса')
+    }
+  }
+
+  static async verifyInnOgrn(data: VerifyInnOgrnDto) {
+    try {
+      const response = await axiosInstance.post<VerifyInnOgrnResponse>(
+        `scrapers/egrul-egrip`,
+        data
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при проверке ИНН и ОГРН')
     }
   }
 }
