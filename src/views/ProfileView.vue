@@ -1,53 +1,78 @@
 <template>
   <div class="profile-view">
-    <div class="profile-view__card">
-      <div class="profile-view__card-header">
-        <p class="profile-view__title">Профиль пользователя</p>
-        <div class="profile-view__buttons">
-          <button
-            class="profile-view__card-header-button"
-            @click="showModalEditProfile = true"
-          >
-            Редактировать
-          </button>
-          <button class="profile-view__card-header-button" @click="logout">
-            Выйти
-          </button>
-        </div>
+    <div class="header">
+      <div class="header__breadcrumbs">
+        <PersonIcon />
+        <p class="header__breadcrumbs-item-text">Мой профиль</p>
+      </div>
+      <div class="header__buttons">
+        <button class="header__button" @click="showModalEditProfile = true">
+          Редактировать профиль
+        </button>
+        <button class="header__button" @click="logout">
+          Выйти из аккаунта
+        </button>
+      </div>
+    </div>
+    <div class="profile-content">
+      <div class="profile-content__avatar">
+        <img
+          :src="`http://localhost:8000${currentUser?.photo_path}`"
+          alt="profile"
+        />
+        <div class="profile-content__avatar-change">Изменить</div>
       </div>
       <div class="profile-view__card-body">
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Фамилия</p>
+          <p class="profile-view__card-body-item-label">
+            <PersonIcon color="#858585" />
+            <span>Фамилия</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{ currentUser?.last_name || 'Не указано' }}
           </p>
         </div>
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Имя</p>
+          <p class="profile-view__card-body-item-label">
+            <PersonIcon color="#858585" />
+            <span>Имя</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{ currentUser?.first_name || 'Не указано' }}
           </p>
         </div>
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Отчество</p>
+          <p class="profile-view__card-body-item-label">
+            <PersonIcon color="#858585" />
+            <span>Отчество</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{ currentUser?.patronymic || 'Не указано' }}
           </p>
         </div>
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Email</p>
+          <p class="profile-view__card-body-item-label">
+            <MailIcon color="#858585" />
+            <span>Email</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{ currentUser?.email || 'Не указано' }}
           </p>
         </div>
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Телефон</p>
+          <p class="profile-view__card-body-item-label">
+            <PhoneIcon color="#858585" />
+            <span>Телефон</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{ currentUser?.phone || 'Не указано' }}
           </p>
         </div>
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Дата рождения</p>
+          <p class="profile-view__card-body-item-label">
+            <DateIcon color="#858585" />
+            <span>Дата рождения</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{
               currentUser?.birthday
@@ -57,18 +82,14 @@
           </p>
         </div>
         <div class="profile-view__card-body-item">
-          <p class="profile-view__card-body-item-label">Роли</p>
+          <p class="profile-view__card-body-item-label">
+            <PasswordIcon color="#858585" />
+            <span>Роли</span>
+          </p>
           <p class="profile-view__card-body-item-value">
             {{ formatRoles(currentUser?.roles) }}
           </p>
         </div>
-        <button
-          v-if="currentUser?.roles.includes('manager')"
-          class="profile-view__card-body-button"
-          @click="goToServices"
-        >
-          Перейти к сервисам
-        </button>
       </div>
     </div>
     <EditProfileModal
@@ -87,19 +108,26 @@ import { useUserStore } from '@/store/user.store'
 import { useAuthStore } from '@/store/auth.store'
 import EditProfileModal from '@/components/ModalBoxes/EditProfileModal.vue'
 import { UpdateUserDto } from '@/js/models/user.dto'
+import PersonIcon from '@/components/icons/PersonIcon.vue'
+import MailIcon from '@/components/icons/MailIcon.vue'
+import DateIcon from '@/components/icons/DateIcon.vue'
+import PhoneIcon from '@/components/icons/PhoneIcon.vue'
+import PasswordIcon from '@/components/icons/PasswordIcon.vue'
 
 export default defineComponent({
   components: {
-    EditProfileModal
+    EditProfileModal,
+    PersonIcon,
+    MailIcon,
+    DateIcon,
+    PhoneIcon,
+    PasswordIcon
   },
   data: () => ({
     showModalEditProfile: false
   }),
   props: {},
   emits: [],
-  async mounted() {
-    await this.userStore.getCurrentUser()
-  },
   computed: {
     ...mapStores(useUserStore, useAuthStore),
     currentUser() {
@@ -126,53 +154,99 @@ export default defineComponent({
 
 <style scoped>
 .profile-view {
+  position: relative;
   height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 36px;
+}
+
+.header__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header__breadcrumbs-item-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.header__buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__button {
+  font-size: 15px;
+  height: 36px;
+  font-weight: 500;
+  padding: 10px 40px;
+}
+
+.profile-content {
+  display: flex;
+  align-items: start;
+  justify-content: flex-start;
+  margin-top: 60px;
+  margin-left: 260px;
+}
+
+.profile-content__avatar {
+  margin-right: 50px;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 14px;
+    border: 1px solid #930eec;
+    object-fit: cover;
+  }
+}
+
+.profile-content__avatar-change {
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 14px;
+  transition: opacity 0.2s;
+}
+
+.profile-content__avatar-change:hover {
+  opacity: 0.8;
+}
+
+.profile-view__card-body {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-view__card {
-  width: 600px;
-  margin: 0 auto;
-  padding: 30px;
-  box-shadow: 0 0 8px 0 rgba(140, 4, 230, 0.2);
-  border-radius: 6px;
-}
-
-.profile-view__card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.profile-view__title {
-  font-size: 22px;
-  text-align: center;
-  font-weight: 600;
-}
-
-.profile-view__card-header-button {
-  width: 100%;
-  padding: 10px 30px;
+  gap: 26px;
+  padding-left: 70px;
+  border-left: 1px solid #9a9a9a;
 }
 
 .profile-view__card-body-item {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
 }
 
 .profile-view__card-body-item-label {
-  font-size: 15px;
-  font-weight: 400;
-  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #858585;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .profile-view__card-body-item-value {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
 }
 

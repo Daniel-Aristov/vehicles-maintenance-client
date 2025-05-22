@@ -1,6 +1,6 @@
 <template>
   <div class="register-form">
-    <p class="register-form__title">Регистрация аккаунта</p>
+    <p class="register-form__title">Регистрация пользователя</p>
     <form @submit.prevent="onSubmit">
       <div class="input-wrapper">
         <input type="text" placeholder="Фамилия" v-model="lastName" />
@@ -28,7 +28,13 @@
         maxlength="18"
       />
       <p v-if="error" class="form-error">{{ error }}</p>
-      <button type="submit" :disabled="!isFormValid">Зарегистрироваться</button>
+      <button
+        class="register-form__button"
+        type="submit"
+        :disabled="!isFormValid"
+      >
+        Зарегистрироваться
+      </button>
     </form>
     <router-link to="/login" class="register-form__link"
       >Уже есть учетная запись? Войдите</router-link
@@ -106,6 +112,7 @@ export default defineComponent({
         password: this.password,
         birthday: this.birthday,
         phone: this.phone,
+        photo_path: null,
         role: this.createUserRole
       })
     }
@@ -115,26 +122,25 @@ export default defineComponent({
 
 <style scoped>
 .register-form {
-  width: 400px;
-  margin: 0 auto;
-  padding: 40px;
-  box-shadow: 0 0 8px 0 rgba(140, 4, 230, 0.2);
-  border-radius: 6px;
+  min-width: 440px;
+  padding: 36px;
+  background-color: #090f23;
+  border-radius: 10px;
 }
 
 .register-form__title {
   text-align: center;
-  font-size: 22px;
+  font-size: 20px;
   margin-bottom: 20px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .register-form__link {
   display: block;
-  font-size: 16px;
+  font-size: 15px;
   text-align: center;
-  margin-top: 20px;
   color: #ffffff;
+  margin-top: 20px;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
@@ -167,6 +173,10 @@ export default defineComponent({
 
 .required-date {
   right: 34px;
+}
+
+.register-form__button {
+  width: 100%;
 }
 
 button:disabled {

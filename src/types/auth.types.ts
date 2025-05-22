@@ -6,10 +6,11 @@ export interface LoginData {
 export interface RegisterData {
   last_name: string
   first_name: string
-  patronymic: string
-  birthday: string
-  phone: string
+  patronymic?: string | null
+  birthday?: string | null
+  phone?: string | null
   email: string
   password: string
   role: string
+  photo?: File | null
 }

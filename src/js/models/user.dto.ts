@@ -9,6 +9,7 @@ export interface UserResponse {
   phone: string
   email: string
   roles: string[]
+  photo_path: string
 }
 
 export interface UpdateUserDto {
@@ -17,4 +18,5 @@ export interface UpdateUserDto {
   patronymic?: string | null
   birthday?: string | null
   phone?: string | null
+  photo_path?: string | null
 }

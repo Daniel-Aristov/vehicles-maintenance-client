@@ -11,15 +11,26 @@
         class="choice-register-entity__button"
         @click="handleClickButton('account')"
       >
-        <DriverIcon />
+        <img src="@/assets/images/choice-driver.png" alt="driver" />
         <span class="choice-register-entity__button-text">Автовладелец</span>
       </button>
       <button
         class="choice-register-entity__button"
         @click="handleClickButton('service')"
       >
-        <CarServiceIcon />
-        <span class="choice-register-entity__button-text">Автосервис</span>
+        <img src="@/assets/images/choice-service.png" alt="service" />
+        <span class="choice-register-entity__button-text"
+          >Владелец автосервиса</span
+        >
+      </button>
+      <button
+        class="choice-register-entity__button"
+        @click="handleClickButton('worker')"
+      >
+        <img src="@/assets/images/choice-worker.png" alt="worker" />
+        <span class="choice-register-entity__button-text"
+          >Сотрудник автосервиса</span
+        >
       </button>
     </div>
   </div>
@@ -27,23 +38,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapStores } from 'pinia'
-import CarServiceIcon from '@/components/icons/CarServiceIcon.vue'
-import DriverIcon from '@/components/icons/DriverIcon.vue'
 
 export default defineComponent({
-  components: {
-    CarServiceIcon,
-    DriverIcon
-  },
-  data: () => ({}),
-  props: {},
-  emits: ['selectedEntity'],
-  computed: {
-    ...mapStores([])
-  },
   methods: {
-    handleClickButton(entity: 'account' | 'service') {
+    handleClickButton(entity: 'account' | 'service' | 'worker') {
       this.$emit('selectedEntity', entity)
     }
   }
@@ -72,7 +70,7 @@ export default defineComponent({
   display: block;
   font-size: 16px;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 40px;
   color: #ffffff;
   text-decoration: none;
   font-weight: 600;
@@ -99,8 +97,8 @@ export default defineComponent({
   border: 1px solid #930eec;
   border-radius: 8px;
   padding: 20px;
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 300px;
   transition: box-shadow 0.3s ease;
 
   &:hover {
@@ -108,10 +106,16 @@ export default defineComponent({
   }
 
   span {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
     margin-top: 15px;
     letter-spacing: 1.5px;
+  }
+
+  img {
+    max-width: 240px;
+    max-height: 180px;
+    object-fit: contain;
   }
 }
 </style>

@@ -1,7 +1,8 @@
-import { defineStore } from 'pinia'
+import { UpdateUserDto } from '@/js/models/user.dto'
 import { UserService } from '@/js/services/user.service'
 import { User } from '@/types/user.types'
-import { UpdateUserDto } from '@/js/models/user.dto'
+import { defineStore } from 'pinia'
+import { useAuthStore } from '@/store/auth.store'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -9,8 +10,16 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getCurrentUser() {
-      const user = await UserService.getCurrentUser()
-      this.user = user
+      const authStore = useAuthStore()
+      try {
+        const user = await UserService.getCurrentUser()
+        this.user = user
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : 'Неизвестная ошибка'
+        authStore.logout()
+        throw new Error(message)
+      }
     },
     async updateCurrentUser(userUpdateData: UpdateUserDto) {
       const updatedUser = await UserService.updateCurrentUser(userUpdateData)
