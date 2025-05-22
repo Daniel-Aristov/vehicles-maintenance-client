@@ -8,6 +8,7 @@ export interface User {
   birthday: string
   phone: string
   email: string
+  photo_path: string
   roles: string[]
 }
 

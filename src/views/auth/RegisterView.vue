@@ -19,67 +19,53 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapStores } from 'pinia'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useAuthStore } from '@/store/auth.store'
-import { useUserStore } from '@/store/user.store'
 import RegisterAccountForm from '@/components/auth/RegisterAccountForm.vue'
 import ChoiceRegisterEntity from '@/components/auth/ChoiceRegisterEntity.vue'
 import RegistrationEmailConfirm from '@/components/auth/RegistrationEmailConfirm.vue'
 import { RegisterData } from '@/types/auth.types'
 import { USER_ROLE_NAMES, UserRole } from '@/types/user.types'
 
-export default defineComponent({
-  components: {
-    RegisterAccountForm,
-    ChoiceRegisterEntity,
-    RegistrationEmailConfirm
-  },
-  data: () => ({
-    error: '',
-    selectedEntity: null as 'account' | 'service' | 'worker' | null,
-    createUserRole: UserRole.OWNER,
-    registrationSuccess: false,
-    userEmail: ''
-  }),
-  mounted() {
-    this.error = ''
-  },
-  computed: {
-    ...mapStores(useAuthStore, useUserStore),
-    createUserRoleName() {
-      switch (this.selectedEntity) {
-        case 'service':
-          return USER_ROLE_NAMES[UserRole.MANAGER]
-        case 'worker':
-          return USER_ROLE_NAMES[UserRole.WORKER]
-        default:
-          return USER_ROLE_NAMES[UserRole.OWNER]
-      }
-    }
-  },
-  methods: {
-    handleSelectedEntity(entity: 'account' | 'service' | 'worker') {
-      this.selectedEntity = entity
-      this.error = ''
-    },
-    async handleRegister(data: RegisterData) {
-      try {
-        this.loadingSendEmail = true
-        await this.authStore.register(data)
-        this.error = ''
-        this.userEmail = data.email
-        this.selectedEntity = null
-        this.registrationSuccess = true
-      } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Произошла ошибка'
-      } finally {
-        this.loadingSendEmail = false
-      }
-    }
+const authStore = useAuthStore()
+
+const error = ref('')
+const selectedEntity = ref<'account' | 'service' | 'worker' | null>(null)
+const registrationSuccess = ref(false)
+const userEmail = ref('')
+const loadingSendEmail = ref(false)
+
+const createUserRoleName = computed(() => {
+  switch (selectedEntity.value) {
+    case 'service':
+      return USER_ROLE_NAMES[UserRole.MANAGER]
+    case 'worker':
+      return USER_ROLE_NAMES[UserRole.WORKER]
+    default:
+      return USER_ROLE_NAMES[UserRole.OWNER]
   }
 })
+
+const handleSelectedEntity = (entity: 'account' | 'service' | 'worker') => {
+  selectedEntity.value = entity
+  error.value = ''
+}
+
+const handleRegister = async (data: RegisterData) => {
+  try {
+    loadingSendEmail.value = true
+    await authStore.register(data)
+    error.value = ''
+    userEmail.value = data.email
+    selectedEntity.value = null
+    registrationSuccess.value = true
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Произошла ошибка'
+  } finally {
+    loadingSendEmail.value = false
+  }
+}
 </script>
 
 <style scoped>

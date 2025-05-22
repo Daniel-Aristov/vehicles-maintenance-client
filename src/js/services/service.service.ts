@@ -1,6 +1,7 @@
 import axiosInstance from '@/js/plugins/axios'
 import {
   CreateServiceDto,
+  InviteWorkerDto,
   ServiceResponse,
   VerifyInnOgrnDto,
   VerifyInnOgrnResponse
@@ -61,6 +62,18 @@ export class ServiceService {
       return response.data
     } catch (error) {
       throw new Error('Произошла ошибка при проверке ИНН и ОГРН')
+    }
+  }
+
+  static async inviteWorker(data: InviteWorkerDto, serviceId: number) {
+    try {
+      const response = await axiosInstance.post<VerifyInnOgrnResponse>(
+        `${API_URL}/${serviceId}/workers/invite`,
+        data
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при отправке письма работнику')
     }
   }
 }

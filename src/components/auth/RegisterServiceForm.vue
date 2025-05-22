@@ -97,9 +97,13 @@ export default defineComponent({
       try {
         this.loadingVerify = true
         const servicesStore = useServicesStore()
-        const verifyData = await servicesStore.verifyInnOgrn({ inn: this.inn })
-        this.commercial_name = verifyData.name
-        this.ogrn = verifyData.ogrn
+        if (this.inn) {
+          const verifyData = await servicesStore.verifyInnOgrn({
+            inn: this.inn
+          })
+          this.commercial_name = verifyData.name
+          this.ogrn = verifyData.ogrn
+        }
       } catch (error) {
         console.error('Ошибка верификации:', error)
       } finally {

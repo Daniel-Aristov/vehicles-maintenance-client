@@ -15,7 +15,7 @@
       </div>
       <div class="header__buttons">
         <button
-          v-if="!isCreateRoute"
+          v-if="isVehiclesRoute"
           class="header__button"
           @click="$router.push('/services/create')"
         >
@@ -40,7 +40,6 @@ import { computed, ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const isCreateRoute = computed(() => route.path.includes('create'))
 const isVehiclesRoute = computed(() => route.path === '/services')
 const searchQuery = ref('')
 const searchText = ref('')

@@ -1,5 +1,5 @@
 <template>
-  <div class="service-card">
+  <div class="service-card" @click="goToServiceDetail">
     <div class="service-card__header">
       <p class="service-card__title">{{ service.name }}</p>
       <div class="service-card__timetable">
@@ -25,6 +25,7 @@ import { Service } from '@/types/service.types'
 import TimeIcon from '@/components/icons/TimeIcon.vue'
 import AdressIcon from '@/components/icons/AdressIcon.vue'
 import InternetIcon from '@/components/icons/InternetIcon.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   components: {
@@ -36,6 +37,17 @@ export default defineComponent({
     service: {
       type: Object as PropType<Service>,
       required: true
+    }
+  },
+  setup(props) {
+    const router = useRouter()
+
+    const goToServiceDetail = () => {
+      router.push(`/services/${props.service.id}`)
+    }
+
+    return {
+      goToServiceDetail
     }
   }
 })

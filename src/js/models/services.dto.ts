@@ -34,3 +34,8 @@ export class VerifyInnOgrnResponse {
 export class VerifyInnOgrnDto {
   inn: string
 }
+
+export class InviteWorkerDto {
+  email: string
+  position: string
+}

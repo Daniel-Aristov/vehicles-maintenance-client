@@ -1,9 +1,8 @@
 import { UpdateUserDto } from '@/js/models/user.dto'
 import { UserService } from '@/js/services/user.service'
-import router from '@/router'
+import { useAuthStore } from '@/store/auth.store'
 import { User } from '@/types/user.types'
 import { defineStore } from 'pinia'
-import { useAuthStore } from '@/store/auth.store'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -18,7 +17,6 @@ export const useUserStore = defineStore('user', {
         const authStore = useAuthStore()
         authStore.logout()
         this.user = null
-        router.push('/login')
         throw new Error('Не удалось получить текущего пользователя')
       }
     },

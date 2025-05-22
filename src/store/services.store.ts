@@ -1,4 +1,4 @@
-import { CreateServiceDto } from '@/js/models/services.dto'
+import { CreateServiceDto, InviteWorkerDto } from '@/js/models/services.dto'
 import { ServiceService } from '@/js/services/service.service'
 import { useUserStore } from '@/store/user.store'
 import { Service, VerifyInnOgrnData } from '@/types/service.types'
@@ -15,6 +15,9 @@ export const useServicesStore = defineStore('services', {
       return state.allServices.filter(
         (service) => service.manager_id === userStore.user?.id
       )
+    },
+    getServiceById: (state) => (id: number) => {
+      return state.allServices.find((service) => service.id === id)
     }
   },
   actions: {
@@ -43,6 +46,14 @@ export const useServicesStore = defineStore('services', {
         return verifyData
       } catch (error) {
         throw new Error('Произошла ошибка при проверке ИНН и ОГРН')
+      }
+    },
+    async inviteWorker(data: InviteWorkerDto, serviceId: number) {
+      try {
+        const inviteData = await ServiceService.inviteWorker(data, serviceId)
+        return inviteData
+      } catch (error) {
+        throw new Error('Произошла ошибка при отправке письма работнику')
       }
     }
   }
