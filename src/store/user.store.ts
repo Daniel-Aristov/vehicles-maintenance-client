@@ -1,6 +1,6 @@
 import { UpdateUserDto } from '@/js/models/user.dto'
 import { UserService } from '@/js/services/user.service'
-import { useAuthStore } from '@/store/auth.store'
+import router from '@/router'
 import { User } from '@/types/user.types'
 import { defineStore } from 'pinia'
 
@@ -10,15 +10,13 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getCurrentUser() {
-      const authStore = useAuthStore()
       try {
         const user = await UserService.getCurrentUser()
         this.user = user
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : 'Неизвестная ошибка'
-        authStore.logout()
-        throw new Error(message)
+        this.user = null
+        router.push('/login')
+        throw error instanceof Error ? error : new Error('Неизвестная ошибка')
       }
     },
     async updateCurrentUser(userUpdateData: UpdateUserDto) {
