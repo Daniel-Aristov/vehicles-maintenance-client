@@ -1,7 +1,7 @@
 <template>
   <div class="login-view">
     <div class="login-car-image">
-      <img src="../assets/images/login-car.png" alt="car" />
+      <img src="@/assets/images/login-car.png" alt="car" />
     </div>
     <LoginForm @submit="handleLogin" :error="error" />
   </div>
