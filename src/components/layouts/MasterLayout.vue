@@ -1,6 +1,6 @@
 <template>
   <div class="master-layout">
-    <MainMenu />
+    <MainMenu @update:loading="updateLoading" />
     <main class="content">
       <div v-if="isLoading" class="loader-container">
         <div class="loader"></div>
@@ -11,25 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useUserStore } from '@/store/user.store'
-import { useServicesStore } from '@/store/services.store'
 import MainMenu from '@/components/MainMenu.vue'
+import { ref } from 'vue'
 
-const userStore = useUserStore()
-const serviceStore = useServicesStore()
+const isLoading = ref(false)
 
-const isLoading = ref(true)
-
-onMounted(async () => {
-  try {
-    await userStore.getCurrentUser()
-    await serviceStore.getServices()
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  } finally {
-    isLoading.value = false
-  }
-})
+const updateLoading = (value: boolean) => {
+  isLoading.value = value
+}
 </script>
 
 <style scoped>

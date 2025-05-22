@@ -3,6 +3,7 @@ import { UserService } from '@/js/services/user.service'
 import router from '@/router'
 import { User } from '@/types/user.types'
 import { defineStore } from 'pinia'
+import { useAuthStore } from '@/store/auth.store'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -14,9 +15,11 @@ export const useUserStore = defineStore('user', {
         const user = await UserService.getCurrentUser()
         this.user = user
       } catch (error) {
+        const authStore = useAuthStore()
+        authStore.logout()
         this.user = null
         router.push('/login')
-        throw error instanceof Error ? error : new Error('Неизвестная ошибка')
+        throw new Error('Не удалось получить текущего пользователя')
       }
     },
     async updateCurrentUser(userUpdateData: UpdateUserDto) {

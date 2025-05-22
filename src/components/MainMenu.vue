@@ -29,9 +29,29 @@ import { useRouter } from 'vue-router'
 import GarageIcon from '@/components/icons/GarageIcon.vue'
 import ServiceIcon from '@/components/icons/ServiceIcon.vue'
 import { isAuthenticated } from '@/js/helpers/auth.helper'
+import { ref, onMounted } from 'vue'
+import { useServicesStore } from '@/store/services.store'
 
-const userStore = useUserStore()
 const router = useRouter()
+const userStore = useUserStore()
+const serviceStore = useServicesStore()
+
+const isLoading = ref(true)
+
+onMounted(async () => {
+  try {
+    isLoading.value = true
+    emit('update:loading', true)
+    await userStore.getCurrentUser()
+    await serviceStore.getServices()
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  } finally {
+    isLoading.value = false
+    emit('update:loading', false)
+  }
+})
+
+const emit = defineEmits(['update:loading'])
 
 const goToProfile = async () => {
   try {
