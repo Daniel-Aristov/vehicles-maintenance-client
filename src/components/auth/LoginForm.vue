@@ -97,6 +97,7 @@ export default defineComponent({
 
 .login-form__password {
   position: relative;
+  margin: 10px 0;
 
   svg {
     position: absolute;

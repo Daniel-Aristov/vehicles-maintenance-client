@@ -139,6 +139,10 @@ export default defineComponent({
   height: 100%;
 }
 
+input {
+  margin-bottom: 10px;
+}
+
 .required {
   color: red;
   position: absolute;

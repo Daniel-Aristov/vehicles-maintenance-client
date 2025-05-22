@@ -5,6 +5,14 @@
         <ServiceIcon />
         <p class="header__breadcrumbs-item-text">Сервисы</p>
       </div>
+      <div class="header__search" v-if="isVehiclesRoute">
+        <input
+          type="text"
+          placeholder="Поиск..."
+          v-model="searchQuery"
+          @keyup.enter="handleSearch"
+        />
+      </div>
       <div class="header__buttons">
         <button
           v-if="!isCreateRoute"
@@ -28,11 +36,20 @@
 
 <script setup lang="ts">
 import ServiceIcon from '@/components/icons/ServiceIcon.vue'
-import { computed } from 'vue'
+import { computed, ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const isCreateRoute = computed(() => route.path.includes('create'))
+const isVehiclesRoute = computed(() => route.path === '/services')
+const searchQuery = ref('')
+const searchText = ref('')
+
+provide('searchText', searchText)
+
+const handleSearch = () => {
+  searchText.value = searchQuery.value
+}
 </script>
 
 <style scoped>
@@ -65,5 +82,17 @@ const isCreateRoute = computed(() => route.path.includes('create'))
   height: 40px;
   font-weight: 500;
   padding: 10px 40px;
+}
+
+.header__search {
+  input {
+    color: white;
+    border: none;
+    width: 500px;
+    height: 40px;
+    background-color: rgba(116, 116, 116, 0.5);
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
 }
 </style>

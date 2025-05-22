@@ -31,9 +31,9 @@
       <button
         class="register-form__button"
         type="submit"
-        :disabled="!isFormValid"
+        :disabled="!isFormValid || loadingSendEmail"
       >
-        Зарегистрироваться
+        {{ loadingSendEmail ? 'Отправка...' : 'Зарегистрироваться' }}
       </button>
     </form>
     <router-link to="/login" class="register-form__link"
@@ -56,6 +56,10 @@ export default defineComponent({
     createUserRole: {
       type: String,
       default: USER_ROLE_NAMES[UserRole.WORKER]
+    },
+    loadingSendEmail: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -160,6 +164,10 @@ export default defineComponent({
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+input {
+  margin-bottom: 10px;
 }
 
 .required {

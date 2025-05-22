@@ -52,6 +52,19 @@ p {
 * {
   scrollbar-width: thin;
   scrollbar-color: #4a4a4a transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  cursor: text;
 }
 
 input {
@@ -60,7 +73,6 @@ input {
   border: 2px solid #ccc;
   border-radius: 10px;
   padding: 12px;
-  margin-bottom: 10px;
   max-width: 100%;
   width: 100%;
   box-sizing: border-box;

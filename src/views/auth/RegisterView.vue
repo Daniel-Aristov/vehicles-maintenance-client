@@ -8,6 +8,7 @@
       <RegisterAccountForm
         :create-user-role="createUserRoleName"
         @submit="handleRegister"
+        :loading="loadingSendEmail"
         :error="error"
       />
       <div class="register-car-image">
@@ -65,6 +66,7 @@ export default defineComponent({
     },
     async handleRegister(data: RegisterData) {
       try {
+        this.loadingSendEmail = true
         await this.authStore.register(data)
         this.error = ''
         this.userEmail = data.email
@@ -72,6 +74,8 @@ export default defineComponent({
         this.registrationSuccess = true
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Произошла ошибка'
+      } finally {
+        this.loadingSendEmail = false
       }
     }
   }
