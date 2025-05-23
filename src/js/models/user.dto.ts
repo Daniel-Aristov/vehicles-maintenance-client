@@ -20,3 +20,15 @@ export interface UpdateUserDto {
   phone?: string | null
   photo_path?: string | null
 }
+
+export interface AssignNewRoleUserResponse {
+  id: number
+  created_at: string
+  updated_at: string
+  user_id: number
+  role: string
+}
+
+export interface AssignNewRoleUserDto {
+  role: string
+}

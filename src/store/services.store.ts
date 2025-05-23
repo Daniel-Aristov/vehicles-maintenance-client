@@ -31,6 +31,16 @@ export const useServicesStore = defineStore('services', {
     },
     async createService(createServiceData: CreateServiceDto) {
       try {
+        const userStore = useUserStore()
+
+        if (!userStore.user) {
+          throw new Error('Пользователь не авторизован')
+        }
+
+        if (!userStore.user.roles.includes('manager')) {
+          await userStore.assignNewRoleUser({ role: 'manager' })
+        }
+
         const data = await ServiceService.createService(createServiceData)
         this.createServiceLocal(data)
       } catch (error) {

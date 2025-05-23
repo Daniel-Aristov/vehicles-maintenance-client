@@ -7,37 +7,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapStores } from 'pinia'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useAuthStore } from '@/store/auth.store'
 import LoginForm from '@/components/auth/LoginForm.vue'
-import { LoginData } from '@/types/auth.types'
+import type { LoginData } from '@/types/auth.types'
 
-export default defineComponent({
-  components: {
-    LoginForm
-  },
-  data: () => ({
-    error: ''
-  }),
-  mounted() {
-    this.error = ''
-  },
-  computed: {
-    ...mapStores(useAuthStore)
-  },
-  methods: {
-    async handleLogin(data: LoginData) {
-      try {
-        await this.authStore.login(data)
-        this.error = ''
-      } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Произошла ошибка'
-      }
-    }
+const error = ref('')
+
+const handleLogin = async (data: LoginData) => {
+  try {
+    const authStore = useAuthStore()
+    await authStore.login(data)
+    error.value = ''
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Произошла ошибка'
   }
-})
+}
 </script>
 
 <style scoped>

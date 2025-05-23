@@ -1,4 +1,4 @@
-import { UpdateUserDto } from '@/js/models/user.dto'
+import { AssignNewRoleUserDto, UpdateUserDto } from '@/js/models/user.dto'
 import { UserService } from '@/js/services/user.service'
 import { useAuthStore } from '@/store/auth.store'
 import { User } from '@/types/user.types'
@@ -23,6 +23,10 @@ export const useUserStore = defineStore('user', {
     async updateCurrentUser(userUpdateData: UpdateUserDto) {
       const updatedUser = await UserService.updateCurrentUser(userUpdateData)
       this.user = updatedUser
+    },
+    async assignNewRoleUser(user: AssignNewRoleUserDto) {
+      const newRoleUser = await UserService.assignNewRoleUser(user)
+      this.user?.roles.push(newRoleUser.role)
     }
   }
 })

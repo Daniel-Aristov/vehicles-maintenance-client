@@ -31,10 +31,12 @@ import ServiceIcon from '@/components/icons/ServiceIcon.vue'
 import { isAuthenticated } from '@/js/helpers/auth.helper'
 import { ref, onMounted } from 'vue'
 import { useServicesStore } from '@/store/services.store'
+import { useVehicleStore } from '@/store/vehicle.store'
 
 const router = useRouter()
 const userStore = useUserStore()
 const serviceStore = useServicesStore()
+const vehicleStore = useVehicleStore()
 
 const isLoading = ref(true)
 
@@ -44,6 +46,7 @@ onMounted(async () => {
     emit('update:loading', true)
     await userStore.getCurrentUser()
     await serviceStore.getServices()
+    await vehicleStore.getVehiclesByCurrentUser()
     await new Promise((resolve) => setTimeout(resolve, 1000))
   } finally {
     isLoading.value = false

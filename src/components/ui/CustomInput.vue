@@ -57,7 +57,7 @@ export default defineComponent({
   justify-content: center;
 }
 
-input {
+input.with-icon {
   padding-left: 50px;
 }
 </style>

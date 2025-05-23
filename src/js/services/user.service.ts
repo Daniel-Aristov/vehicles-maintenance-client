@@ -1,4 +1,9 @@
-import { UpdateUserDto, UserResponse } from '@/js/models/user.dto'
+import {
+  AssignNewRoleUserDto,
+  AssignNewRoleUserResponse,
+  UpdateUserDto,
+  UserResponse
+} from '@/js/models/user.dto'
 import axiosInstance from '@/js/plugins/axios'
 import { AxiosError } from 'axios'
 
@@ -35,6 +40,18 @@ export class UserService {
       throw new Error(
         'Произошла ошибка при обновлении информации о пользователе'
       )
+    }
+  }
+
+  static async assignNewRoleUser(user: AssignNewRoleUserDto) {
+    try {
+      const response = await axiosInstance.post<AssignNewRoleUserResponse>(
+        `${API_URL}/me/roles`,
+        user
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при назначении новой роли пользователю')
     }
   }
 }

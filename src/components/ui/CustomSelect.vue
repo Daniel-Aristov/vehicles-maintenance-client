@@ -1,16 +1,24 @@
 <template>
-  <div
-    class="custom-select"
-    @click="toggleDropdown"
-    v-click-outside="closeDropdown"
-  >
-    <div class="custom-select__input">
-      <input readonly :placeholder="placeholder" :value="selectedLabel" />
-      <span class="custom-select__arrow" :class="{ 'is-open': isOpen }">
+  <div class="custom-select" v-click-outside="closeDropdown">
+    <div
+      class="custom-select__input"
+      :class="{ 'is-disabled': disabled }"
+      @click="toggleDropdown"
+    >
+      <input
+        readonly
+        :placeholder="placeholder"
+        :value="selectedLabel"
+        :disabled="disabled"
+      />
+      <span
+        class="custom-select__arrow"
+        :class="{ 'is-open': isOpen, 'is-disabled': disabled }"
+      >
         <DownArrowIcon />
       </span>
     </div>
-    <div v-if="isOpen" class="custom-select__dropdown">
+    <div v-if="isOpen && !disabled" class="custom-select__dropdown">
       <div
         v-for="option in options"
         :key="option.value"
@@ -43,6 +51,10 @@ export default defineComponent({
     placeholder: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['update:modelValue'],
@@ -57,7 +69,9 @@ export default defineComponent({
     })
 
     const toggleDropdown = () => {
-      isOpen.value = !isOpen.value
+      if (!props.disabled) {
+        isOpen.value = !isOpen.value
+      }
     }
 
     const closeDropdown = () => {
@@ -96,7 +110,7 @@ export default defineComponent({
 
 .custom-select__input input {
   width: 100%;
-  height: 50px;
+  height: 43px;
   background: #ffffff;
   border: 1px solid #e5e5e5;
   border-radius: 10px;
@@ -111,6 +125,7 @@ export default defineComponent({
   top: 50%;
   transform: translateY(-50%);
   transition: transform 0.2s;
+  cursor: pointer;
 }
 
 .custom-select__arrow.is-open {
@@ -132,11 +147,33 @@ export default defineComponent({
 }
 
 .custom-select__option {
+  color: #000;
   padding: 12px 20px;
   cursor: pointer;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.custom-select__option:last-child {
+  border-bottom: none;
 }
 
 .custom-select__option:hover {
   background: #f5f5f5;
+}
+
+.custom-select__input.is-disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  border-radius: 10px;
+}
+
+.custom-select__input.is-disabled input {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+.custom-select__arrow.is-disabled {
+  opacity: 0.5;
 }
 </style>
