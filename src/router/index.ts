@@ -9,7 +9,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    redirect: '/profile'
+    redirect: '/vehicles'
   },
   {
     path: '/login',
