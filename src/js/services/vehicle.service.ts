@@ -146,4 +146,14 @@ export class VehicleService {
       throw new Error('Произошла ошибка при получении конфигураций автомобиля')
     }
   }
+
+  static async changeOwner(vehicleId: number, email: string) {
+    try {
+      await axiosInstance.post(`${API_URL}/${vehicleId}/init-transfer`, {
+        email
+      })
+    } catch (error) {
+      throw new Error('Не удалось отправить письмо на почту нового владельца')
+    }
+  }
 }

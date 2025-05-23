@@ -2,35 +2,40 @@
   <div class="vehicle-detail">
     <div class="vehicle-detail__header-container">
       <div class="vehicle-detail__header">
-        <img
-          :src="vehicle?.generation.photo_url"
-          alt="vehicle"
-          class="vehicle-detail__header-image"
-        />
-        <div class="vehicle-detail__header-info">
-          <div class="vehicle-detail__header-text-container">
+        <div class="vehicle-detail__header-inner">
+          <img
+            :src="vehicle?.generation.photo_url"
+            alt="vehicle"
+            class="vehicle-detail__header-image"
+          />
+          <div class="vehicle-detail__header-info">
+            <div class="vehicle-detail__header-text-container">
+              <p class="vehicle-detail__header-text">
+                <span>Марка: </span>
+                {{ vehicle?.make.name }}
+              </p>
+              <p class="vehicle-detail__header-text">
+                <span>Модель: </span>
+                {{ vehicle?.model.name }}
+              </p>
+            </div>
             <p class="vehicle-detail__header-text">
-              <span>Марка: </span>
-              {{ vehicle?.make.name }}
+              <span>Модельный ряд: </span>
+              {{ vehicle?.range.name }}
             </p>
             <p class="vehicle-detail__header-text">
-              <span>Модель: </span>
-              {{ vehicle?.model.name }}
+              <span>VIN: </span>
+              {{ vehicle?.vin }}
+            </p>
+            <p class="vehicle-detail__header-text">
+              <span>Регистрационный номер: </span>
+              {{ vehicle?.registration_plate }}
             </p>
           </div>
-          <p class="vehicle-detail__header-text">
-            <span>Модельный ряд: </span>
-            {{ vehicle?.range.name }}
-          </p>
-          <p class="vehicle-detail__header-text">
-            <span>VIN: </span>
-            {{ vehicle?.vin }}
-          </p>
-          <p class="vehicle-detail__header-text">
-            <span>Регистрационный номер: </span>
-            {{ vehicle?.registration_plate }}
-          </p>
         </div>
+        <button class="change-owner-button" @click="openChangeOwnerModal">
+          <ChangeOwnerIcon />
+        </button>
       </div>
       <div class="vehicle-detail__header-card-info-container">
         <div class="vehicle-detail__header-card-info">
@@ -70,22 +75,44 @@
         </button>
       </div>
     </div>
+    <ChangeOwnerModal
+      :is-open="isChangeOwnerModalOpen"
+      @close="closeChangeOwnerModal"
+      @submit="handleChangeOwner"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useVehicleStore } from '@/store/vehicle.store'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
+import ChangeOwnerIcon from '@/components/icons/ChangeOwnerIcon.vue'
+import ChangeOwnerModal from '@/components/vehicles/ChangeOwnerModal.vue'
 
 const route = useRoute()
 const vehicleStore = useVehicleStore()
+
+const isChangeOwnerModalOpen = ref(false)
 
 const vehicle = computed(() => {
   const id = Number(route.params.id)
   return vehicleStore.getVehicleById(id)
 })
+
+const openChangeOwnerModal = () => {
+  isChangeOwnerModalOpen.value = true
+}
+
+const closeChangeOwnerModal = () => {
+  isChangeOwnerModalOpen.value = false
+}
+
+const handleChangeOwner = (data: { email: string }) => {
+  vehicleStore.changeOwner(Number(route.params.id), data.email)
+  closeChangeOwnerModal()
+}
 </script>
 
 <style scoped>
@@ -100,6 +127,12 @@ const vehicle = computed(() => {
 }
 
 .vehicle-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.vehicle-detail__header-inner {
   display: flex;
   gap: 50px;
 
@@ -180,6 +213,22 @@ const vehicle = computed(() => {
   svg {
     width: 16px;
     height: 16px;
+  }
+}
+
+.change-owner-button {
+  background-color: #090f23;
+  border-radius: 12px;
+  padding: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
   }
 }
 </style>

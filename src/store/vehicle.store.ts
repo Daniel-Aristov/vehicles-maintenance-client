@@ -72,6 +72,13 @@ export const useVehicleStore = defineStore('vehicle', {
         generationId
       )
       this.configurations = configurations
+    },
+    async changeOwner(vehicleId: number, email: string) {
+      try {
+        await VehicleService.changeOwner(vehicleId, email)
+      } catch (error) {
+        throw new Error('Не удалось отправить письмо на почту нового владельца')
+      }
     }
   }
 })
