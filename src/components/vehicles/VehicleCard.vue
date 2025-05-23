@@ -1,5 +1,5 @@
 <template>
-  <div class="vehicle-card" :style="cardStyle">
+  <div class="vehicle-card" :style="cardStyle" @click="goToVehicleDetail">
     <p class="vehicle-card__title">
       <span>{{ props.vehicle.make.name }}</span> -
       <span>{{ props.vehicle.model.name }}</span>
@@ -13,6 +13,9 @@
 <script lang="ts" setup>
 import { Vehicle } from '@/types/vehicle.types'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps<{
   vehicle: Vehicle
@@ -23,6 +26,10 @@ const cardStyle = computed(() => ({
     ? `url(${props.vehicle.generation.photo_url})`
     : 'none'
 }))
+
+const goToVehicleDetail = () => {
+  router.push(`/vehicles/${props.vehicle.id}`)
+}
 </script>
 
 <style scoped>

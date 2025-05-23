@@ -20,6 +20,11 @@ export const useVehicleStore = defineStore('vehicle', {
     generations: [] as Generation[],
     configurations: [] as Configuration[]
   }),
+  getters: {
+    getVehicleById: (state) => (id: number) => {
+      return state.vehiclesCurrentUser.find((vehicle) => vehicle.id === id)
+    }
+  },
   actions: {
     async getVehiclesByCurrentUser() {
       const vehicles = await VehicleService.getVehiclesByCurrentUser()

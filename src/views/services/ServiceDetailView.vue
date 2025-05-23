@@ -15,7 +15,7 @@
       <div class="service-detail__header">
         <img
           class="service-detail__header-image"
-          src="../../assets/images/service-default.jpg"
+          src="@/assets/images/service-default.jpg"
           alt="service"
         />
         <div>

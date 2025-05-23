@@ -46,6 +46,11 @@ const routes = [
             path: 'create',
             name: 'vehicles-create',
             component: () => import('@/views/vehicles/VehicleCreateView.vue')
+          },
+          {
+            path: ':id',
+            name: 'vehicle-detail',
+            component: () => import('@/views/vehicles/VehicleDetailView.vue')
           }
         ]
       },
