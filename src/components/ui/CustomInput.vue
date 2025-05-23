@@ -7,7 +7,8 @@
       :type="type"
       :placeholder="placeholder"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target?.value)"
+      :maxlength="maxlength"
+      @input="handleInput"
       :class="{ 'with-icon': icon }"
     />
   </div>
@@ -30,12 +31,21 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    maxlength: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: [String, Object],
       default: null
     }
   },
-  emits: ['update:modelValue']
+  emits: ['update:modelValue'],
+  methods: {
+    handleInput(e: Event) {
+      this.$emit('update:modelValue', (e.target as HTMLInputElement).value)
+    }
+  }
 })
 </script>
 

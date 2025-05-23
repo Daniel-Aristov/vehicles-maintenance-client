@@ -59,6 +59,8 @@ const becomeOwner = async () => {
   gap: 30px;
   padding: 0 36px;
   min-height: 70px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .vehicles-list__add-button {

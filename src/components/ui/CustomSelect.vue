@@ -19,7 +19,11 @@
       </span>
     </div>
     <div v-if="isOpen && !disabled" class="custom-select__dropdown">
+      <div v-if="options.length === 0" class="custom-select__option">
+        Список пуст!
+      </div>
       <div
+        v-else
         v-for="option in options"
         :key="option.value"
         class="custom-select__option"
@@ -175,5 +179,12 @@ export default defineComponent({
 
 .custom-select__arrow.is-disabled {
   opacity: 0.5;
+}
+
+.custom-select__empty {
+  color: #999;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 14px;
 }
 </style>
