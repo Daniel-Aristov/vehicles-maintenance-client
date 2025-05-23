@@ -1,12 +1,12 @@
 <template>
   <div class="vehicle-create">
     <h2 class="vehicle-create__title">Добавление автосервиса</h2>
-    <RegisterServiceForm @submit="onSubmit" />
+    <CreateServiceForm @submit="onSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
-import RegisterServiceForm from '@/components/auth/RegisterServiceForm.vue'
+import CreateServiceForm from '@/components/services/CreateServiceForm.vue'
 import { useServicesStore } from '@/store/services.store'
 import { useRouter } from 'vue-router'
 import { CreateServiceDto } from '@/js/models/services.dto'
@@ -29,6 +29,8 @@ const onSubmit = (data: CreateServiceDto) => {
 
 .vehicle-create {
   padding: 0 36px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .vehicle-create__form {

@@ -22,7 +22,6 @@ export class CreateServiceDto {
   summary: string | null
   timetable: string
   website: string | null
-  manager_id: number
 }
 
 export class VerifyInnOgrnResponse {

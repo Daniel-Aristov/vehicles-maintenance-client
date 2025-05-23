@@ -55,7 +55,6 @@ const showBackButton = computed(() => route.path !== '/vehicles')
 }
 
 .header__button {
-  height: 40px;
   font-weight: 500;
   padding: 10px 40px;
 }

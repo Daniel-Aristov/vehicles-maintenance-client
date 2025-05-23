@@ -31,12 +31,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps<{
+defineProps<{
   serviceId: number
 }>()
 
 const clients = computed(() => {
-  console.log(props.serviceId)
   return [
     {
       id: 1,

@@ -7,6 +7,7 @@
       :range-options="rangeOptions"
       :generation-options="generationOptions"
       :configuration-options="configurationOptions"
+      :error="errorCreateVehicle"
       @select-make="selectMake"
       @select-model="selectModel"
       @select-range="selectRange"
@@ -17,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useVehicleStore } from '@/store/vehicle.store'
 import { useRouter } from 'vue-router'
 import VehiclesCreateForm from '@/components/vehicles/VehiclesCreateForm.vue'
@@ -25,6 +26,7 @@ import { CreateVehicleDto } from '@/js/models/vehicle.dto'
 
 const router = useRouter()
 const vehicleStore = useVehicleStore()
+const errorCreateVehicle = ref<string>('')
 
 const makeOptions = computed(() => {
   return vehicleStore.makes.map((make) => ({
@@ -78,8 +80,12 @@ const selectGeneration = async (generationId: number) => {
 }
 
 const handleSubmit = async (vehicleData: CreateVehicleDto) => {
-  await vehicleStore.createVehicle(vehicleData)
-  router.push({ name: 'vehicles' })
+  try {
+    await vehicleStore.createVehicle(vehicleData)
+    router.push({ name: 'vehicles' })
+  } catch (error) {
+    errorCreateVehicle.value = error as string
+  }
 }
 
 onMounted(async () => {

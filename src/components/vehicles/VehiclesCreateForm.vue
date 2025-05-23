@@ -94,6 +94,7 @@
       </div>
     </div>
     <div class="vehicle-create__buttons">
+      <p v-if="error" class="form-error">{{ error }}</p>
       <button type="submit" :disabled="!isFormValid">Создать</button>
       <button type="button" class="vehicle-create__reset" @click="resetForm">
         Сбросить
@@ -115,6 +116,7 @@ defineProps<{
   rangeOptions: { value: number; label: string }[]
   generationOptions: { value: number; label: string }[]
   configurationOptions: { value: number; label: string }[]
+  error?: string
 }>()
 
 defineEmits<{
@@ -287,24 +289,10 @@ const resetForm = () => {
   }
 }
 
-.vehicle-create__file {
-  margin-top: 8px;
-}
-
-.vehicle-create__file-input {
+.form-error {
+  color: #ff4444;
+  margin: 10px 0;
+  text-align: center;
   width: 100%;
-  padding: 8px;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  background: white;
-}
-
-.vehicle-create__file-input::-webkit-file-upload-button {
-  padding: 4px 8px;
-  margin-right: 8px;
-  border-radius: 4px;
-  border: 1px solid #e5e7eb;
-  background: white;
-  cursor: pointer;
 }
 </style>

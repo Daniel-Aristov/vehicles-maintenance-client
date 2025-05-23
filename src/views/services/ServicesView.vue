@@ -67,7 +67,7 @@ onMounted(async () => {
   justify-content: start;
   align-items: center;
   gap: 20px;
-  max-height: 85vh;
+  max-height: 75vh;
   overflow-y: auto;
 }
 

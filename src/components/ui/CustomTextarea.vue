@@ -1,17 +1,17 @@
 <template>
-  <div class="custom-input">
-    <span class="custom-input__icon" v-if="icon">
+  <div class="custom-textarea">
+    <span class="custom-textarea__icon" v-if="icon">
       <component :is="icon" color="#858585" />
     </span>
-    <input
-      :type="type"
+    <textarea
       :placeholder="placeholder"
       :value="modelValue"
       :maxlength="maxlength"
       :disabled="disabled"
+      :rows="rows"
       @input="handleInput"
       :class="{ 'with-icon': icon }"
-    />
+    ></textarea>
   </div>
 </template>
 
@@ -20,10 +20,6 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
-    type: {
-      type: String,
-      default: 'text'
-    },
     placeholder: {
       type: String,
       default: ''
@@ -43,43 +39,50 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false
+    },
+    rows: {
+      type: Number,
+      default: 3
     }
   },
   emits: ['update:modelValue'],
   methods: {
     handleInput(e: Event) {
-      this.$emit('update:modelValue', (e.target as HTMLInputElement).value)
+      this.$emit('update:modelValue', (e.target as HTMLTextAreaElement).value)
     }
   }
 })
 </script>
 
 <style scoped>
-.custom-input {
+.custom-textarea {
   position: relative;
   width: 100%;
+
+  textarea {
+    width: 535px;
+  }
 }
 
-.custom-input__icon {
+.custom-textarea__icon {
   position: absolute;
   width: 25px;
   height: 25px;
   left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-input.with-icon {
-  padding-left: 50px;
-}
-
-input:disabled {
+textarea:disabled {
   background-color: #c7c7c7 !important;
   color: #000000 !important;
   cursor: not-allowed;
   opacity: 1;
+}
+
+textarea.with-icon {
+  padding-left: 50px;
 }
 </style>
