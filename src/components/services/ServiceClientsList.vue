@@ -2,6 +2,10 @@
   <div class="clients-list">
     <div class="clients-list__header">
       <p>Список клиентов</p>
+      <button class="clients-list__add-button" @click="isModalOpen = true">
+        <PlusIcon />
+        <span>Добавить клиента</span>
+      </button>
     </div>
     <div class="clients-list__content">
       <div v-if="clients.length === 0" class="clients-list__empty">
@@ -9,11 +13,7 @@
       </div>
       <div v-else class="clients-list__items">
         <div v-for="client in clients" :key="client.id" class="client-card">
-          <img
-            src="@/assets/images/avatar-default.png"
-            alt="client"
-            class="client-card__avatar"
-          />
+          <img src="@/assets/images/avatar-default.png" alt="client-avatar" />
           <div class="client-card__info">
             <p class="client-card__name">
               {{ client.last_name }} {{ client.first_name }}
@@ -25,13 +25,23 @@
         </div>
       </div>
     </div>
+    <InviteClientModal
+      :is-open="isModalOpen"
+      @close="isModalOpen = false"
+      @submit="handleInviteClient"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import InviteClientModal from '@/components/services/InviteClientModal.vue'
+import PlusIcon from '@/components/icons/PlusIcon.vue'
+import { useServicesStore } from '@/store/services.store'
 
-defineProps<{
+const servicesStore = useServicesStore()
+
+const props = defineProps<{
   serviceId: number
 }>()
 
@@ -48,6 +58,12 @@ const clients = computed(() => {
     }
   ]
 })
+
+const isModalOpen = ref(false)
+
+const handleInviteClient = (data: { email: string }) => {
+  servicesStore.inviteClient({ email: data.email }, props.serviceId)
+}
 </script>
 
 <style scoped>
@@ -64,6 +80,21 @@ const clients = computed(() => {
   p {
     font-size: 18px;
     font-weight: 500;
+  }
+}
+
+.clients-list__add-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+
+  svg {
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -86,13 +117,13 @@ const clients = computed(() => {
   padding: 16px;
   background-color: #132974;
   border-radius: 8px;
-}
 
-.client-card__avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  object-fit: cover;
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 }
 
 .client-card__info {

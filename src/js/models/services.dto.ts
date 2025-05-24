@@ -66,3 +66,7 @@ export class InviteWorkerDto {
   email: string
   position: string
 }
+
+export class InviteClientDto {
+  email: string
+}

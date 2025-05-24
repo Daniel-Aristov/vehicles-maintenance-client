@@ -1,6 +1,6 @@
-import axiosInstance from '@/js/plugins/axios'
 import {
   CreateServiceDto,
+  InviteClientDto,
   InviteWorkerDto,
   ServiceClientResponse,
   ServiceResponse,
@@ -8,6 +8,7 @@ import {
   VerifyInnOgrnDto,
   VerifyInnOgrnResponse
 } from '@/js/models/services.dto'
+import axiosInstance from '@/js/plugins/axios'
 
 const API_URL = '/services'
 
@@ -89,11 +90,11 @@ export class ServiceService {
     }
   }
 
-  static async inviteClient(email: string, serviceId: number) {
+  static async inviteClient(data: InviteClientDto, serviceId: number) {
     try {
       await axiosInstance.post<void>(
         `${API_URL}/${serviceId}/clients/invite`,
-        email
+        data
       )
     } catch (error) {
       throw new Error('Произошла ошибка при отправке письма клиенту')

@@ -1,4 +1,8 @@
-import { CreateServiceDto, InviteWorkerDto } from '@/js/models/services.dto'
+import {
+  CreateServiceDto,
+  InviteClientDto,
+  InviteWorkerDto
+} from '@/js/models/services.dto'
 import { ServiceService } from '@/js/services/service.service'
 import { useUserStore } from '@/store/user.store'
 import { Service, VerifyInnOgrnData } from '@/types/service.types'
@@ -81,9 +85,9 @@ export const useServicesStore = defineStore('services', {
         throw new Error('Произошла ошибка при получении клиентов автосервиса')
       }
     },
-    async inviteClient(email: string, serviceId: number) {
+    async inviteClient(data: InviteClientDto, serviceId: number) {
       try {
-        await ServiceService.inviteClient(email, serviceId)
+        await ServiceService.inviteClient(data, serviceId)
       } catch (error) {
         throw new Error('Произошла ошибка при отправке письма клиенту')
       }
