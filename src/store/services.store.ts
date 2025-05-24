@@ -58,12 +58,34 @@ export const useServicesStore = defineStore('services', {
         throw new Error('Произошла ошибка при проверке ИНН и ОГРН')
       }
     },
+    async getServiceWorkers(serviceId: number) {
+      try {
+        const workers = await ServiceService.getServiceWorkers(serviceId)
+        return workers
+      } catch (error) {
+        throw new Error('Произошла ошибка при получении работников автосервиса')
+      }
+    },
     async inviteWorker(data: InviteWorkerDto, serviceId: number) {
       try {
-        const inviteData = await ServiceService.inviteWorker(data, serviceId)
-        return inviteData
+        await ServiceService.inviteWorker(data, serviceId)
       } catch (error) {
         throw new Error('Произошла ошибка при отправке письма работнику')
+      }
+    },
+    async getServiceClients(serviceId: number) {
+      try {
+        const clients = await ServiceService.getServiceClients(serviceId)
+        return clients
+      } catch (error) {
+        throw new Error('Произошла ошибка при получении клиентов автосервиса')
+      }
+    },
+    async inviteClient(email: string, serviceId: number) {
+      try {
+        await ServiceService.inviteClient(email, serviceId)
+      } catch (error) {
+        throw new Error('Произошла ошибка при отправке письма клиенту')
       }
     }
   }

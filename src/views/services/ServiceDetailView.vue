@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useServicesStore } from '@/store/services.store'
 import { useUserStore } from '@/store/user.store'
@@ -103,6 +103,13 @@ const tabs = [
 const service = computed(() => {
   const id = Number(route.params.id)
   return servicesStore.getServiceById(id)
+})
+
+onMounted(() => {
+  if (isServiceManager.value) {
+    servicesStore.getServiceWorkers(Number(route.params.id))
+    servicesStore.getServiceClients(Number(route.params.id))
+  }
 })
 
 const isServiceManager = computed(() => {

@@ -2,7 +2,9 @@ import axiosInstance from '@/js/plugins/axios'
 import {
   CreateServiceDto,
   InviteWorkerDto,
+  ServiceClientResponse,
   ServiceResponse,
+  ServiceWorkerResponse,
   VerifyInnOgrnDto,
   VerifyInnOgrnResponse
 } from '@/js/models/services.dto'
@@ -65,13 +67,45 @@ export class ServiceService {
     }
   }
 
+  static async getServiceWorkers(serviceId: number) {
+    try {
+      const response = await axiosInstance.get<ServiceWorkerResponse[]>(
+        `${API_URL}/${serviceId}/workers`
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при получении работников автосервиса')
+    }
+  }
+
+  static async getServiceClients(serviceId: number) {
+    try {
+      const response = await axiosInstance.get<ServiceClientResponse[]>(
+        `${API_URL}/${serviceId}/clients`
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при получении клиентов автосервиса')
+    }
+  }
+
+  static async inviteClient(email: string, serviceId: number) {
+    try {
+      await axiosInstance.post<void>(
+        `${API_URL}/${serviceId}/clients/invite`,
+        email
+      )
+    } catch (error) {
+      throw new Error('Произошла ошибка при отправке письма клиенту')
+    }
+  }
+
   static async inviteWorker(data: InviteWorkerDto, serviceId: number) {
     try {
-      const response = await axiosInstance.post<VerifyInnOgrnResponse>(
+      await axiosInstance.post<void>(
         `${API_URL}/${serviceId}/workers/invite`,
         data
       )
-      return response.data
     } catch (error) {
       throw new Error('Произошла ошибка при отправке письма работнику')
     }
