@@ -47,7 +47,6 @@ onMounted(async () => {
     await userStore.getCurrentUser()
     await serviceStore.getServices()
     await vehicleStore.getVehiclesByCurrentUser()
-    await new Promise((resolve) => setTimeout(resolve, 1000))
   } finally {
     isLoading.value = false
     emit('update:loading', false)
