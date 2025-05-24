@@ -1,5 +1,3 @@
-import { UserResponse } from '@/js/models/user.dto'
-
 export class ServiceResponse {
   id: number
   created: string
@@ -38,18 +36,14 @@ export class ServiceWorkerResponse {
   rating: number
 }
 
-export class ServiceClientResponse implements UserResponse {
+export class ServiceClientResponse {
   id: number
-  created_at: string
-  updated_at: string
   last_name: string
   first_name: string
   patronymic: string
-  birthday: string
   photo_path: string
   phone: string
   email: string
-  roles: string[]
 }
 
 export class VerifyInnOgrnResponse {

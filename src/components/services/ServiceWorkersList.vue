@@ -13,20 +13,18 @@
       </div>
       <div v-else class="workers-list__items">
         <div v-for="worker in workers" :key="worker.id" class="worker-card">
-          <img
-            src="@/assets/images/avatar-default.png"
-            alt="worker"
-            class="worker-card__avatar"
-          />
-          <div class="worker-card__info">
-            <p class="worker-card__name">
+          <div class="worker-card__name">
+            <img src="@/assets/images/avatar-default.png" alt="worker-avatar" />
+            <p>
               {{ worker.last_name }} {{ worker.first_name }}
               {{ worker.patronymic }}
             </p>
-            <p class="worker-card__email">{{ worker.email }}</p>
-            <p class="worker-card__phone">{{ worker.phone }}</p>
           </div>
-          <button class="worker-card__remove">Удалить</button>
+          <p class="worker-card__email">{{ worker.email }}</p>
+          <p class="worker-card__phone">{{ worker.phone }}</p>
+          <div class="worker-card__pop-menu">
+            <PopMenuIcon />
+          </div>
         </div>
       </div>
     </div>
@@ -43,6 +41,7 @@ import { computed, ref } from 'vue'
 import InviteWorkerModal from '@/components/services/InviteWorkerModal.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useServicesStore } from '@/store/services.store'
+import PopMenuIcon from '@/components/icons/PopMenuIcon.vue'
 
 const servicesStore = useServicesStore()
 
@@ -53,17 +52,7 @@ const props = defineProps<{
 const isModalOpen = ref(false)
 
 const workers = computed(() => {
-  return [
-    {
-      id: 1,
-      photo_path: null,
-      last_name: 'Иванов',
-      first_name: 'Иван',
-      patronymic: 'Иванович',
-      email: 'ivanov@example.com',
-      phone: '+79991234567'
-    }
-  ]
+  return servicesStore.serviceWorkers
 })
 
 const handleInviteWorker = (data: { email: string; position: string }) => {
@@ -80,11 +69,69 @@ const handleInviteWorker = (data: { email: string; position: string }) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 
   p {
     font-size: 18px;
     font-weight: 500;
+  }
+}
+
+.worker-card {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 50px;
+  padding: 12px;
+  background-color: #22293f;
+  border-radius: 12px;
+  cursor: pointer;
+
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.worker-card__name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.workers-list__content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.worker-card__email,
+.worker-card__phone {
+  font-size: 15px;
+  color: #d2d2d2;
+}
+
+.worker-card__pop-menu {
+  position: absolute;
+  right: 25px;
+  top: 14px;
+  cursor: pointer;
+  width: 22px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  svg {
+    width: 4px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -115,45 +162,9 @@ const handleInviteWorker = (data: { email: string; position: string }) => {
   gap: 16px;
 }
 
-.worker-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 16px;
-  background-color: #132974;
-  border-radius: 8px;
-}
-
-.worker-card__avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  object-fit: cover;
-}
-
-.worker-card__info {
-  flex: 1;
-}
-
-.worker-card__name {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
 .worker-card__email,
 .worker-card__phone {
-  font-size: 14px;
-  color: #858585;
-}
-
-.worker-card__remove {
-  padding: 6px 16px;
-  font-size: 14px;
-  background-color: #ff4444;
-
-  &:hover {
-    background-color: #ff2222;
-  }
+  font-size: 15px;
+  color: #d2d2d2;
 }
 </style>

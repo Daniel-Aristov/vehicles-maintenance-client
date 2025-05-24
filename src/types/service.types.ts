@@ -1,5 +1,3 @@
-import { User } from '@/types/user.types'
-
 export interface Service {
   id: number
   created: string
@@ -27,7 +25,15 @@ export interface ServiceWorker {
   rating: number
 }
 
-export type ServiceClient = User
+export interface ServiceClient {
+  id: number
+  last_name: string
+  first_name: string
+  patronymic: string
+  photo_path: string
+  phone: string
+  email: string
+}
 
 export interface CreateServiceData {
   name: string

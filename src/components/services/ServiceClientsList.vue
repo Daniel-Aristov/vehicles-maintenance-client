@@ -12,15 +12,23 @@
         <p>Список клиентов пуст</p>
       </div>
       <div v-else class="clients-list__items">
-        <div v-for="client in clients" :key="client.id" class="client-card">
-          <img src="@/assets/images/avatar-default.png" alt="client-avatar" />
-          <div class="client-card__info">
+        <div
+          v-for="client in clients"
+          :key="client.id"
+          class="client-card"
+          @click="handleClientClick(client)"
+        >
+          <div class="client-card__name">
+            <img src="@/assets/images/avatar-default.png" alt="client-avatar" />
             <p class="client-card__name">
               {{ client.last_name }} {{ client.first_name }}
               {{ client.patronymic }}
             </p>
-            <p class="client-card__email">{{ client.email }}</p>
-            <p class="client-card__phone">{{ client.phone }}</p>
+          </div>
+          <p class="client-card__email">{{ client.email }}</p>
+          <p class="client-card__phone">{{ client.phone }}</p>
+          <div class="client-card__pop-menu">
+            <PopMenuIcon />
           </div>
         </div>
       </div>
@@ -38,6 +46,7 @@ import { computed, ref } from 'vue'
 import InviteClientModal from '@/components/services/InviteClientModal.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useServicesStore } from '@/store/services.store'
+import PopMenuIcon from '@/components/icons/PopMenuIcon.vue'
 
 const servicesStore = useServicesStore()
 
@@ -46,17 +55,7 @@ const props = defineProps<{
 }>()
 
 const clients = computed(() => {
-  return [
-    {
-      id: 1,
-      photo_path: '/images/worker1.jpg',
-      last_name: 'Иванов',
-      first_name: 'Иван',
-      patronymic: 'Иванович',
-      email: 'ivanov@example.com',
-      phone: '+79991234567'
-    }
-  ]
+  return servicesStore.serviceClients
 })
 
 const isModalOpen = ref(false)
@@ -75,7 +74,7 @@ const handleInviteClient = (data: { email: string }) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 
   p {
     font-size: 18px;
@@ -113,10 +112,12 @@ const handleInviteClient = (data: { email: string }) => {
 .client-card {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 16px;
-  background-color: #132974;
-  border-radius: 8px;
+  position: relative;
+  gap: 50px;
+  padding: 12px;
+  background-color: #22293f;
+  border-radius: 12px;
+  cursor: pointer;
 
   img {
     width: 30px;
@@ -126,30 +127,43 @@ const handleInviteClient = (data: { email: string }) => {
   }
 }
 
-.client-card__info {
-  flex: 1;
+.client-card__name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.client-card__name {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;
+.clients-list__content {
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .client-card__email,
 .client-card__phone {
-  font-size: 14px;
-  color: #858585;
+  font-size: 15px;
+  color: #d2d2d2;
 }
 
-.client-card__vehicles {
-  padding: 6px 16px;
-  background-color: rgba(116, 116, 116, 0.3);
+.client-card__pop-menu {
+  position: absolute;
+  right: 25px;
+  top: 14px;
+  cursor: pointer;
+  width: 22px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 4px;
-}
+  transition: background-color 0.2s ease;
 
-.client-card__vehicles-count {
-  font-size: 14px;
-  color: #858585;
+  svg {
+    width: 4px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
 }
 </style>

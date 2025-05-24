@@ -5,12 +5,19 @@ import {
 } from '@/js/models/services.dto'
 import { ServiceService } from '@/js/services/service.service'
 import { useUserStore } from '@/store/user.store'
-import { Service, VerifyInnOgrnData } from '@/types/service.types'
+import {
+  Service,
+  ServiceClient,
+  ServiceWorker,
+  VerifyInnOgrnData
+} from '@/types/service.types'
 import { defineStore } from 'pinia'
 
 export const useServicesStore = defineStore('services', {
   state: () => ({
-    allServices: [] as Service[]
+    allServices: [] as Service[],
+    serviceClients: [] as ServiceClient[],
+    serviceWorkers: [] as ServiceWorker[]
   }),
   getters: {
     getAllServices: (state) => state.allServices,
@@ -65,7 +72,7 @@ export const useServicesStore = defineStore('services', {
     async getServiceWorkers(serviceId: number) {
       try {
         const workers = await ServiceService.getServiceWorkers(serviceId)
-        return workers
+        this.serviceWorkers = workers
       } catch (error) {
         throw new Error('Произошла ошибка при получении работников автосервиса')
       }
@@ -80,7 +87,7 @@ export const useServicesStore = defineStore('services', {
     async getServiceClients(serviceId: number) {
       try {
         const clients = await ServiceService.getServiceClients(serviceId)
-        return clients
+        this.serviceClients = clients
       } catch (error) {
         throw new Error('Произошла ошибка при получении клиентов автосервиса')
       }
