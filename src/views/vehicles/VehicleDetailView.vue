@@ -37,7 +37,10 @@
           <ChangeOwnerIcon />
         </button>
       </div>
-      <div class="vehicle-detail__header-card-info-container">
+      <div
+        class="vehicle-detail__header-card-info-container"
+        v-if="!isMaintenanceFormVisible"
+      >
         <div class="vehicle-detail__header-card-info">
           <p class="vehicle-detail__header-card-info-title">Поколение</p>
           <div class="vehicle-detail__header-card-info-text-container">
@@ -50,8 +53,10 @@
           <p class="vehicle-detail__header-card-info-title">Конфигурация</p>
           <div class="vehicle-detail__header-card-info-text-container">
             <p>Мощность двигателя: {{ vehicle?.configuration.engine_power }}</p>
-            <p>Объем двигателя: {{ vehicle?.configuration.engine_capacity }}</p>
-            <p>Тип двигателя: {{ vehicle?.configuration.engine_type }}</p>
+            <p>
+              Двигатель: {{ vehicle?.configuration.engine_capacity }} л.
+              {{ vehicle?.configuration.engine_type }}
+            </p>
             <p>Коробка передач: {{ vehicle?.configuration.transmission }}</p>
             <p>Привод: {{ vehicle?.configuration.drive }}</p>
           </div>
@@ -66,15 +71,10 @@
         </div>
       </div>
     </div>
-    <div class="vehicle-detail__history">
-      <div class="vehicle-detail__history-header">
-        <p>История технического обслуживания</p>
-        <button class="vehicle-detail__history-button">
-          <PlusIcon />
-          <span>Добавить запись</span>
-        </button>
-      </div>
-    </div>
+    <MaintenanceHistory
+      :vehicle-id="Number(route.params.id)"
+      @update:formVisible="isMaintenanceFormVisible = $event"
+    />
     <ChangeOwnerModal
       :is-open="isChangeOwnerModalOpen"
       @close="closeChangeOwnerModal"
@@ -87,13 +87,14 @@
 import { useVehicleStore } from '@/store/vehicle.store'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import PlusIcon from '@/components/icons/PlusIcon.vue'
 import ChangeOwnerIcon from '@/components/icons/ChangeOwnerIcon.vue'
 import ChangeOwnerModal from '@/components/vehicles/ChangeOwnerModal.vue'
+import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory.vue'
 
 const route = useRoute()
 const vehicleStore = useVehicleStore()
 
+const isMaintenanceFormVisible = ref(false)
 const isChangeOwnerModalOpen = ref(false)
 
 const vehicle = computed(() => {
@@ -137,8 +138,8 @@ const handleChangeOwner = (data: { email: string }) => {
   gap: 50px;
 
   img {
-    width: 250px;
-    height: 140px;
+    width: 230px;
+    height: 130px;
     object-fit: cover;
     border-radius: 12px;
   }
@@ -147,7 +148,7 @@ const handleChangeOwner = (data: { email: string }) => {
 .vehicle-detail__header-info {
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 9px;
 }
 
 .vehicle-detail__header-text-container {
@@ -168,7 +169,7 @@ const handleChangeOwner = (data: { email: string }) => {
   border-radius: 12px;
   padding: 18px 24px;
   width: 360px;
-  height: 175px;
+  height: 145px;
 }
 
 .vehicle-detail__header-card-info-text-container {
@@ -176,7 +177,7 @@ const handleChangeOwner = (data: { email: string }) => {
   flex-direction: column;
   gap: 8px;
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .vehicle-detail__header-card-info-title {
@@ -189,30 +190,6 @@ const handleChangeOwner = (data: { email: string }) => {
 
   span {
     font-weight: 600;
-  }
-}
-
-.vehicle-detail__history {
-  padding-top: 20px;
-}
-
-.vehicle-detail__history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.vehicle-detail__history-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 15px;
-  min-width: 220px;
-
-  svg {
-    width: 16px;
-    height: 16px;
   }
 }
 
