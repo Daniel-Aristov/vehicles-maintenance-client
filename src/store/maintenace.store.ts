@@ -16,6 +16,15 @@ export const useMaintenanceStore = defineStore('maintenance', {
       } catch (error) {
         throw new Error('Не удалось создать запись технического обслуживания')
       }
+    },
+    async getMaintenanceRecords(vehicleId: number) {
+      try {
+        const maintenanceRecords =
+          await MaintenanceService.getMaintenanceRecords(vehicleId)
+        this.maintenanceRecords = maintenanceRecords
+      } catch (error) {
+        throw new Error('Не удалось получить записи технического обслуживания')
+      }
     }
   }
 })

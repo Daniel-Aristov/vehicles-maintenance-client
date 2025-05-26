@@ -51,14 +51,12 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config
 
     if (error.response?.status === 401) {
-      // Если это ответ от refresh-token endpoint
       if (originalRequest.url?.includes('refresh-access-token')) {
         removeUserTokens()
         router.push('/login')
         return Promise.reject(error)
       }
 
-      // Обычная обработка 401 для других endpoints
       if (!originalRequest._retry) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {

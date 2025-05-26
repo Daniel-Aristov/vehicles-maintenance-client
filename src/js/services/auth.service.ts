@@ -34,14 +34,12 @@ export class AuthService {
     try {
       const formData = new FormData()
 
-      // Добавляем обязательные поля
       formData.append('last_name', data.last_name)
       formData.append('first_name', data.first_name)
       formData.append('email', data.email)
       formData.append('password', data.password)
       formData.append('role', data.role)
 
-      // Добавляем опциональные поля
       if (data.patronymic) formData.append('patronymic', data.patronymic)
       if (data.birthday) formData.append('birthday', data.birthday)
       if (data.phone) formData.append('phone', data.phone)

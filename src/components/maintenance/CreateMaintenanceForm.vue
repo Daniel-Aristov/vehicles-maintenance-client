@@ -17,7 +17,7 @@
             placeholder="Описание"
           />
           <div class="create-maintenance-form__left-side-inner">
-            <div>
+            <div class="create-maintenance-form__left-side-inner-date-mileage">
               <CustomInput
                 v-model="maintenanceRecord.date"
                 label="Дата выполнения"
@@ -66,10 +66,21 @@
               </div>
             </div>
           </div>
+          <div class="create-maintenance-form__buttons">
+            <button type="submit" :disabled="!isFormValid">Добавить</button>
+            <button
+              type="button"
+              class="create-maintenance-form__reset"
+              @click="returnToHistory"
+            >
+              Отмена
+            </button>
+          </div>
         </div>
         <div class="create-maintenance-form__right-side">
           <CustomSelect
             v-model="maintenanceRecord.maintenance_performer"
+            class="create-maintenance-form__select-performer"
             :options="maintenancePerformerOptions"
             placeholder="Тип технического обслуживания"
             @update:modelValue="$emit('selectMaintenancePerformer', $event)"
@@ -130,16 +141,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="create-maintenance-form__buttons">
-        <button type="submit" :disabled="!isFormValid">Добавить</button>
-        <button
-          type="button"
-          class="create-maintenance-form__reset"
-          @click="returnToHistory"
-        >
-          Отмена
-        </button>
       </div>
     </form>
   </div>
@@ -203,12 +204,14 @@ const handleSubmit = () => {
     ...maintenanceRecord.value,
     vehicle_id: props.vehicleId,
     total_cost,
-    documents: selectedFiles.value,
-    photos: selectedImages.value,
-    service_id: null,
-    responsible_id: null,
+    documents: selectedFiles.value.length ? selectedFiles.value : null,
+    photos: selectedImages.value.length ? selectedImages.value : null,
+    // TODO: remove this after adding the service and responsible
+    service_id: 3,
+    responsible_id: 1,
     service_workers_ids: ''
   })
+  returnToHistory()
 }
 
 const returnToHistory = () => {
@@ -268,12 +271,30 @@ const removeImage = (index: number) => {
 
 .create-maintenance-form__form-content {
   display: flex;
-  gap: 40px;
+  gap: 25px;
+}
+
+.create-maintenance-form__left-side,
+.create-maintenance-form__right-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.create-maintenance-form__right-side {
+  flex: 1;
+}
+
+.create-maintenance-form__left-side-inner-date-mileage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .create-maintenance-form__left-side-inner {
   display: flex;
   gap: 25px;
+  justify-content: space-between;
 }
 
 .create-maintenance-form__title {
@@ -373,17 +394,17 @@ const removeImage = (index: number) => {
 }
 
 .create-maintenance-form__photo-container {
-  margin-top: 20px;
+  margin-top: 10px;
 
   p {
     max-width: 210px;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
   }
 
   img {
-    width: 160px;
-    height: 150px;
-    object-fit: cover;
+    width: 120px;
+    height: 110px;
+    object-fit: contain;
   }
 }
 

@@ -1,32 +1,6 @@
 <template>
   <div class="maintenance-card-history">
-    <div class="maintenance-card-history__header">
-      <p>
-        История технического обслуживания
-        <span>2025-05-24</span>
-      </p>
-      <p>
-        <span>1000</span>
-      </p>
-    </div>
-    <div class="maintenance-card-history__header">
-      <p>
-        История технического обслуживания
-        <span>2025-05-24</span>
-      </p>
-      <p>
-        <span>1000</span>
-      </p>
-    </div>
-    <div class="maintenance-card-history__header">
-      <p>
-        История технического обслуживания
-        <span>2025-05-24</span>
-      </p>
-      <p>
-        <span>1000</span>
-      </p>
-    </div>
+    Запись истории технического обслуживания
   </div>
 </template>
 

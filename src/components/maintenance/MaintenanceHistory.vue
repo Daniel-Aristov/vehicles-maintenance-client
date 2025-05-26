@@ -16,22 +16,40 @@
       :vehicle-id="vehicleId"
       @update:formVisible="handleFormVisible"
     />
-    <MaintenanceCardHistory v-if="!isFormVisible" />
+    <div v-if="!isFormVisible">
+      <div v-if="maintenanceStore.maintenanceRecords.length">
+        <MaintenanceCardHistory
+          v-for="maintenanceRecord in maintenanceStore.maintenanceRecords"
+          :key="maintenanceRecord.date"
+          :maintenance-record="maintenanceRecord"
+        />
+      </div>
+      <div v-else class="maintenance-history__empty">
+        <p>Записей технического обслуживания нет!</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import MaintenanceCardHistory from '@/components/maintenance/MaintenanceCardHistory.vue'
 import CreateMaintenanceForm from '@/components/maintenance/CreateMaintenanceForm.vue'
+import { useMaintenanceStore } from '@/store/maintenace.store'
+
+const maintenanceStore = useMaintenanceStore()
 
 const emit = defineEmits(['update:formVisible'])
 const isFormVisible = ref(false)
 
-defineProps<{
+const props = defineProps<{
   vehicleId: number
 }>()
+
+onMounted(async () => {
+  await maintenanceStore.getMaintenanceRecords(props.vehicleId)
+})
 
 const toggleForm = () => {
   isFormVisible.value = !isFormVisible.value
@@ -67,5 +85,13 @@ const handleFormVisible = (value: boolean) => {
     width: 16px;
     height: 16px;
   }
+}
+
+.maintenance-history__empty {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #666;
+  margin-top: 40px;
 }
 </style>
