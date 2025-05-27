@@ -29,6 +29,32 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/views/ProfileView.vue')
+      },
+      {
+        path: 'vehicles',
+        component: VehiclesLayout,
+        children: [
+          {
+            path: '',
+            name: 'vehicles',
+            component: () => import('@/views/vehicles/VehiclesView.vue')
+          },
+          {
+            path: 'create',
+            name: 'vehicles-create',
+            component: () => import('@/views/vehicles/VehicleCreateView.vue')
+          },
+          {
+            path: ':id',
+            name: 'vehicle-detail',
+            component: () => import('@/views/vehicles/VehicleDetailView.vue')
+          }
+        ]
+      },
+      {
         path: 'services',
         component: ServicesLayout,
         children: [
