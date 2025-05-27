@@ -25,6 +25,15 @@ export const useMaintenanceStore = defineStore('maintenance', {
       } catch (error) {
         throw new Error('Не удалось получить записи технического обслуживания')
       }
+    },
+    async getMaintenancePurchaseOrders(maintenanceOrderId: number) {
+      try {
+        await MaintenanceService.getMaintenancePurchaseOrders(
+          maintenanceOrderId
+        )
+      } catch (error) {
+        throw new Error('Не удалось получить накладную')
+      }
     }
   }
 })

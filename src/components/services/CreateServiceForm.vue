@@ -6,7 +6,7 @@
           <CustomInput
             :icon="TitleIcon"
             type="text"
-            placeholder="Название сервиса"
+            placeholder="Коммерческое обозначение"
             v-model="nameService"
           />
           <span class="required">*</span>
@@ -39,7 +39,7 @@
           <CustomInput
             :icon="TitleIcon"
             type="text"
-            placeholder="Коммерческое имя (автоматически)"
+            placeholder="Наименование"
             disabled
             v-model="commercial_name"
           />
@@ -49,7 +49,7 @@
           <CustomInput
             :icon="DocsIcon"
             type="text"
-            placeholder="ОГРН (автоматически)"
+            placeholder="ОГРН (ОГРНИП)"
             disabled
             v-model="ogrn"
           />
@@ -88,18 +88,6 @@
           placeholder="Сайт сервиса"
           v-model="website"
         />
-        <div class="service-create__info-photo" @click="handlePhotoClick">
-          <p>Выберите фотографию автосервиса</p>
-          <img src="@/assets/images/choice-image-service.png" alt="upload" />
-          <input
-            type="file"
-            accept="image/*"
-            @change="handleFileChange"
-            class="service-create__file-input"
-            style="display: none"
-            ref="fileInput"
-          />
-        </div>
       </div>
     </div>
     <p v-if="error" class="form-error">{{ error }}</p>
@@ -142,8 +130,6 @@ const summary = ref('')
 const timetable = ref('')
 const website = ref('')
 const loadingVerify = ref(false)
-const photoFile = ref<File | null>(null)
-const fileInput = ref<HTMLInputElement | null>(null)
 const verificationError = ref('')
 
 const isInnValid = computed(() => {
@@ -208,17 +194,6 @@ const resetForm = () => {
   summary.value = ''
   timetable.value = ''
   website.value = ''
-}
-
-const handlePhotoClick = () => {
-  fileInput.value?.click()
-}
-
-const handleFileChange = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
-    photoFile.value = input.files[0]
-  }
 }
 </script>
 

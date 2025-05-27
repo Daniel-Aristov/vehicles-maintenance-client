@@ -14,21 +14,12 @@
         >
           Стать автовладельцем
         </div>
-        <div
-          v-if="isOwner"
-          class="vehicles-list__add-button"
-          @click="$router.push('/vehicles/create')"
-        >
-          <PlusIcon />
-          <span>Добавить автомобиль</span>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useVehicleStore } from '@/store/vehicle.store'
 import { useUserStore } from '@/store/user.store'
 import VehicleCard from '@/components/vehicles/VehicleCard.vue'

@@ -1,9 +1,11 @@
 <template>
   <div class="maintenance-history">
     <div class="maintenance-history__header">
-      <p v-if="!isFormVisible">История технического обслуживания</p>
+      <p v-if="!isFormVisible && !selectedRecord">
+        История технического обслуживания
+      </p>
       <button
-        v-if="!isFormVisible"
+        v-if="!isFormVisible && !selectedRecord"
         class="maintenance-history__button"
         @click="toggleForm"
       >
@@ -16,12 +18,21 @@
       :vehicle-id="vehicleId"
       @update:formVisible="handleFormVisible"
     />
-    <div v-if="!isFormVisible">
-      <div v-if="maintenanceStore.maintenanceRecords.length">
+    <MaintenanceCardDetails
+      v-if="selectedRecord"
+      :maintenance-record="selectedRecord"
+      @close="handleCloseDetails"
+    />
+    <div v-if="!isFormVisible && !selectedRecord">
+      <div
+        v-if="maintenanceStore.maintenanceRecords.length"
+        class="maintenance-history__cards"
+      >
         <MaintenanceCardHistory
           v-for="maintenanceRecord in maintenanceStore.maintenanceRecords"
           :key="maintenanceRecord.date"
           :maintenance-record="maintenanceRecord"
+          @click="handleCardClick"
         />
       </div>
       <div v-else class="maintenance-history__empty">
@@ -36,12 +47,15 @@ import { onMounted, ref } from 'vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import MaintenanceCardHistory from '@/components/maintenance/MaintenanceCardHistory.vue'
 import CreateMaintenanceForm from '@/components/maintenance/CreateMaintenanceForm.vue'
+import MaintenanceCardDetails from '@/components/maintenance/MaintenanceCardDetails.vue'
 import { useMaintenanceStore } from '@/store/maintenace.store'
+import { MaintenanceRecord } from '@/types/maintenace'
 
 const maintenanceStore = useMaintenanceStore()
 
-const emit = defineEmits(['update:formVisible'])
+const emit = defineEmits(['update:formVisible', 'update:selectedRecord'])
 const isFormVisible = ref(false)
+const selectedRecord = ref<MaintenanceRecord | null>(null)
 
 const props = defineProps<{
   vehicleId: number
@@ -59,6 +73,16 @@ const toggleForm = () => {
 const handleFormVisible = (value: boolean) => {
   isFormVisible.value = value
   emit('update:formVisible', value)
+}
+
+const handleCardClick = (record: MaintenanceRecord) => {
+  selectedRecord.value = record
+  emit('update:selectedRecord', record)
+}
+
+const handleCloseDetails = () => {
+  selectedRecord.value = null
+  emit('update:selectedRecord', null)
 }
 </script>
 
@@ -85,6 +109,13 @@ const handleFormVisible = (value: boolean) => {
     width: 16px;
     height: 16px;
   }
+}
+
+.maintenance-history__cards {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .maintenance-history__empty {

@@ -82,7 +82,7 @@
             v-model="maintenanceRecord.maintenance_performer"
             class="create-maintenance-form__select-performer"
             :options="maintenancePerformerOptions"
-            placeholder="Тип технического обслуживания"
+            placeholder="Ответственный за работу"
             @update:modelValue="$emit('selectMaintenancePerformer', $event)"
           />
           <CustomInput
@@ -176,9 +176,7 @@ const maintenanceRecord = ref({
 const maintenanceStore = useMaintenanceStore()
 
 const maintenancePerformerOptions = ref([
-  { value: 'owner', label: 'Владелец' },
-  { value: 'unregistered_service', label: 'Незарегистрированный сервис' },
-  { value: 'registered_service', label: 'Зарегистрированный сервис' }
+  { value: 1, label: 'Иванов Илья Викторович' }
 ])
 
 const selectedFiles = ref<File[]>([])
@@ -196,22 +194,26 @@ const isFormValid = computed(() => {
   )
 })
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   const total_cost =
-    maintenanceRecord.value.parts_cost + maintenanceRecord.value.labor_cost
+    Number(maintenanceRecord.value.parts_cost) +
+    Number(maintenanceRecord.value.labor_cost)
 
-  maintenanceStore.createMaintenanceRecord({
-    ...maintenanceRecord.value,
-    vehicle_id: props.vehicleId,
-    total_cost,
-    documents: selectedFiles.value.length ? selectedFiles.value : null,
-    photos: selectedImages.value.length ? selectedImages.value : null,
-    // TODO: remove this after adding the service and responsible
-    service_id: 3,
-    responsible_id: 1,
-    service_workers_ids: ''
-  })
-  returnToHistory()
+  try {
+    await maintenanceStore.createMaintenanceRecord({
+      ...maintenanceRecord.value,
+      vehicle_id: props.vehicleId,
+      total_cost,
+      documents: selectedFiles.value.length ? selectedFiles.value : null,
+      photos: selectedImages.value.length ? selectedImages.value : null,
+      service_id: 3,
+      responsible_id: 1,
+      service_workers_ids: ''
+    })
+    returnToHistory()
+  } catch (error) {
+    console.error('Ошибка при создании записи:', error)
+  }
 }
 
 const returnToHistory = () => {

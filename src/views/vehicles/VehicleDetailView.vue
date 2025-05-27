@@ -33,9 +33,6 @@
             </p>
           </div>
         </div>
-        <button class="change-owner-button" @click="openChangeOwnerModal">
-          <ChangeOwnerIcon />
-        </button>
       </div>
       <div
         class="vehicle-detail__header-card-info-container"
@@ -45,8 +42,7 @@
           <p class="vehicle-detail__header-card-info-title">Поколение</p>
           <div class="vehicle-detail__header-card-info-text-container">
             <p>Полное название: {{ vehicle?.generation.full_name }}</p>
-            <p>Короткое название: {{ vehicle?.generation.short_name }}</p>
-            <p>Кузов: {{ vehicle?.generation.vehicle_body }}</p>
+            <p>{{ vehicle?.generation.short_name }}</p>
           </div>
         </div>
         <div class="vehicle-detail__header-card-info">
@@ -74,6 +70,7 @@
     <MaintenanceHistory
       :vehicle-id="Number(route.params.id)"
       @update:formVisible="isMaintenanceFormVisible = $event"
+      @update:selectedRecord="isMaintenanceFormVisible = $event"
     />
     <ChangeOwnerModal
       :is-open="isChangeOwnerModalOpen"
@@ -87,7 +84,6 @@
 import { useVehicleStore } from '@/store/vehicle.store'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import ChangeOwnerIcon from '@/components/icons/ChangeOwnerIcon.vue'
 import ChangeOwnerModal from '@/components/vehicles/ChangeOwnerModal.vue'
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory.vue'
 
@@ -101,10 +97,6 @@ const vehicle = computed(() => {
   const id = Number(route.params.id)
   return vehicleStore.getVehicleById(id)
 })
-
-const openChangeOwnerModal = () => {
-  isChangeOwnerModalOpen.value = true
-}
 
 const closeChangeOwnerModal = () => {
   isChangeOwnerModalOpen.value = false

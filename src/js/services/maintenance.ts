@@ -60,4 +60,14 @@ export class MaintenanceService {
       )
     }
   }
+
+  static async getMaintenancePurchaseOrders(maintenanceOrderId: number) {
+    try {
+      await axiosInstance.post<void>(
+        `${API_URL}/${maintenanceOrderId}/purchase-orders`
+      )
+    } catch (error) {
+      throw new Error('Произошла ошибка при получении накладной')
+    }
+  }
 }

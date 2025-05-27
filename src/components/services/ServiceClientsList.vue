@@ -12,12 +12,7 @@
         <p>Список клиентов пуст</p>
       </div>
       <div v-else class="clients-list__items">
-        <div
-          v-for="client in clients"
-          :key="client.id"
-          class="client-card"
-          @click="handleClientClick(client)"
-        >
+        <div v-for="client in clients" :key="client.id" class="client-card">
           <div class="client-card__name">
             <img src="@/assets/images/avatar-default.png" alt="client-avatar" />
             <p class="client-card__name">
