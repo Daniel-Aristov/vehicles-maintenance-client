@@ -33,6 +33,9 @@
             </p>
           </div>
         </div>
+        <button class="change-owner-button" @click="openChangeOwnerModal">
+          <ChangeOwnerIcon />
+        </button>
       </div>
       <div
         class="vehicle-detail__header-card-info-container"
@@ -85,6 +88,7 @@ import { useVehicleStore } from '@/store/vehicle.store'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ChangeOwnerModal from '@/components/vehicles/ChangeOwnerModal.vue'
+import ChangeOwnerIcon from '@/components/icons/ChangeOwnerIcon.vue'
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory.vue'
 
 const route = useRoute()
@@ -97,6 +101,10 @@ const vehicle = computed(() => {
   const id = Number(route.params.id)
   return vehicleStore.getVehicleById(id)
 })
+
+const openChangeOwnerModal = () => {
+  isChangeOwnerModalOpen.value = true
+}
 
 const closeChangeOwnerModal = () => {
   isChangeOwnerModalOpen.value = false
