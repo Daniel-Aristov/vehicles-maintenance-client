@@ -13,7 +13,7 @@
         <span>Добавить запись</span>
       </button>
     </div>
-    <CreateMaintenanceForm
+    <CreateMaintenanceFormDriver
       v-if="isFormVisible"
       :vehicle-id="vehicleId"
       @update:formVisible="handleFormVisible"
@@ -46,7 +46,7 @@
 import { onMounted, ref } from 'vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import MaintenanceCardHistory from '@/components/maintenance/MaintenanceCardHistory.vue'
-import CreateMaintenanceForm from '@/components/maintenance/CreateMaintenanceForm.vue'
+import CreateMaintenanceFormDriver from '@/components/maintenance/CreateMaintenanceFormDriver.vue'
 import MaintenanceCardDetails from '@/components/maintenance/MaintenanceCardDetails.vue'
 import { useMaintenanceStore } from '@/store/maintenace.store'
 import { MaintenanceRecord } from '@/types/maintenace'

@@ -149,7 +149,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useMaintenanceStore } from '@/store/maintenace.store'
-import { MaintenancePerformer } from '@/types/maintenace'
+import {
+  MaintenancePerformer,
+  MaintenancePerformerDriver
+} from '@/types/maintenace'
 import CustomInput from '@/components/ui/CustomInput.vue'
 import CustomTextarea from '@/components/ui/CustomTextarea.vue'
 import CustomSelect from '@/components/ui/CustomSelect.vue'
@@ -176,7 +179,8 @@ const maintenanceRecord = ref({
 const maintenanceStore = useMaintenanceStore()
 
 const maintenancePerformerOptions = ref([
-  { value: 1, label: 'Иванов Илья Викторович' }
+  { value: 'owner', label: 'Собственник' },
+  { value: 'unregistered_service', label: 'Незарегистрированный сервис' }
 ])
 
 const selectedFiles = ref<File[]>([])
@@ -206,8 +210,6 @@ const handleSubmit = async () => {
       total_cost,
       documents: selectedFiles.value.length ? selectedFiles.value : null,
       photos: selectedImages.value.length ? selectedImages.value : null,
-      service_id: 3,
-      responsible_id: 1,
       service_workers_ids: ''
     })
     returnToHistory()
@@ -222,7 +224,7 @@ const returnToHistory = () => {
     description: '',
     date: '',
     mileage: 0,
-    maintenance_performer: '' as MaintenancePerformer,
+    maintenance_performer: '' as MaintenancePerformerDriver,
     parts_cost: 0,
     labor_cost: 0
   }

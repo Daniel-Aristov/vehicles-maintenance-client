@@ -6,8 +6,8 @@ export interface MaintenanceRecord {
   date: string
   vehicle_id: number
   mileage: number
-  service_id: number
-  responsible: ServiceWorker
+  service_id?: number
+  responsible?: ServiceWorker
   description: string
   parts_cost: number
   labor_cost: number
@@ -21,7 +21,8 @@ export interface MaintenanceRecord {
   service_workers: ServiceWorker[]
 }
 
+export type MaintenancePerformerDriver = 'owner' | 'unregistered_service'
+
 export type MaintenancePerformer =
-  | 'owner'
-  | 'unregistered_service'
+  | MaintenancePerformerDriver
   | 'registered_service'

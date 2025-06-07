@@ -28,7 +28,7 @@
               {{ vehicle?.vin }}
             </p>
             <p class="vehicle-detail__header-text">
-              <span>Регистрационный номер: </span>
+              <span>Регистрационный знак: </span>
               {{ vehicle?.registration_plate }}
             </p>
           </div>

@@ -47,20 +47,6 @@ export class MaintenanceService {
     }
   }
 
-  static async getMaintenanceRecords(vehicleId: number) {
-    try {
-      const response = await axiosInstance.get<MaintenanceRecordResponse[]>(
-        `${API_URL}/${vehicleId}/maintenance-records`
-      )
-
-      return response.data
-    } catch (error) {
-      throw new Error(
-        'Произошла ошибка при получении записей технического обслуживания'
-      )
-    }
-  }
-
   static async getMaintenancePurchaseOrders(maintenanceOrderId: number) {
     try {
       await axiosInstance.post<void>(

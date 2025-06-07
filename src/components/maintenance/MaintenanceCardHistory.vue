@@ -22,39 +22,23 @@
           maintenanceRecord.maintenance_performer === 'unregistered_service'
         "
       >
-        <CarServiceIcon class="maintenance-card-history__icon" />
-        <span>Запись о неизвестном сервисе</span>
+        <ServiceIcon class="maintenance-card-history__icon" />
+        <span>Запись об обслуживании в незарегистрированном сервисе</span>
       </p>
       <div
         v-else-if="
           maintenanceRecord.maintenance_performer === 'registered_service'
         "
+        class="maintenance-card-history__service"
       >
         <p>
           <ServiceIcon class="maintenance-card-history__icon" />
-          Сервис: Сервис №4
+          <span>Сервис: </span> {{ serviceName }}
         </p>
         <p>
           <AdressIcon class="maintenance-card-history__icon" />
-          Адрес: Ярославская область, г. Ярославль, ул. Нефтяников, 17А
+          <span>Адрес: </span> {{ serviceAddress }}
         </p>
-      </div>
-      <div v-else>
-        <p>
-          <ServiceIcon class="maintenance-card-history__icon" />
-          Сервис: Сервис №4
-        </p>
-        <p>
-          <AdressIcon class="maintenance-card-history__icon" />
-          Адрес: Ярославская область, г. Ярославль, ул. Нефтяников, 17А
-        </p>
-        <button
-          class="maintenance-card-history__download-btn"
-          @click.stop="getMaintenancePurchaseOrders"
-        >
-          <DocsIcon class="maintenance-card-history__icon" />
-          <span>Скачать заказ-наряд</span>
-        </button>
       </div>
     </div>
   </div>
@@ -64,12 +48,12 @@
 import { MaintenanceRecord } from '@/types/maintenace'
 import { computed } from 'vue'
 import PersonIcon from '@/components/icons/PersonIcon.vue'
-import CarServiceIcon from '@/components/icons/CarServiceIcon.vue'
 import DateIcon from '@/components/icons/DateIcon.vue'
 import ServiceIcon from '@/components/icons/ServiceIcon.vue'
 import AdressIcon from '@/components/icons/AdressIcon.vue'
-import DocsIcon from '@/components/icons/DocsIcon.vue'
-import purchaseOrderPdf from '@/assets/Purchase-order.pdf'
+import { useServicesStore } from '@/store/services.store'
+
+const serviceStore = useServicesStore()
 
 const props = defineProps<{
   maintenanceRecord: MaintenanceRecord
@@ -81,13 +65,18 @@ const formattedDate = computed(() => {
   return new Date(props.maintenanceRecord.date).toLocaleDateString('ru-RU')
 })
 
-const getMaintenancePurchaseOrders = () => {
-  const link = document.createElement('a')
-  link.href = purchaseOrderPdf
-  link.download = 'Purchase-order.pdf'
-  link.target = '_blank'
-  link.click()
-}
+const service = computed(() => {
+  if (!props.maintenanceRecord.service_id) return null
+  return serviceStore.getServiceById(props.maintenanceRecord.service_id)
+})
+
+const serviceName = computed(() => {
+  return service?.value?.name
+})
+
+const serviceAddress = computed(() => {
+  return service?.value?.address
+})
 </script>
 
 <style scoped>
@@ -157,5 +146,9 @@ const getMaintenancePurchaseOrders = () => {
   &:hover {
     opacity: 0.8;
   }
+}
+
+.maintenance-card-history__service {
+  font-weight: 500;
 }
 </style>

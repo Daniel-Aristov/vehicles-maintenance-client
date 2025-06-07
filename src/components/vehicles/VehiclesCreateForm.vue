@@ -67,7 +67,7 @@
           />
           <CustomInput
             v-model="registrationPlate"
-            placeholder="Регистрационный номер"
+            placeholder="Регистрационный знак"
             class="vehicle-create__input"
           />
         </div>

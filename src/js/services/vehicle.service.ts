@@ -9,6 +9,7 @@ import {
 } from '@/js/models/vehicle.dto'
 import axiosInstance from '@/js/plugins/axios'
 import { AxiosError } from 'axios'
+import { MaintenanceRecordResponse } from '@/js/models/maintenance.dto'
 
 const API_URL = '/vehicles'
 
@@ -62,6 +63,20 @@ export class VehicleService {
       await axiosInstance.delete(`${API_URL}/${vehicleId}`)
     } catch (error) {
       throw new Error('Произошла ошибка при удалении автомобиля')
+    }
+  }
+
+  static async getMaintenanceRecords(vehicleId: number) {
+    try {
+      const response = await axiosInstance.get<MaintenanceRecordResponse[]>(
+        `${API_URL}/${vehicleId}/maintenance-records`
+      )
+
+      return response.data
+    } catch (error) {
+      throw new Error(
+        'Произошла ошибка при получении записей технического обслуживания'
+      )
     }
   }
 

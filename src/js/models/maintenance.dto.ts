@@ -28,8 +28,8 @@ export interface MaintenanceRecordDto {
   date: string
   vehicle_id: number
   mileage: number
-  service_id: number | null
-  responsible_id: number | null
+  service_id?: number
+  responsible_id?: number
   description: string | null
   parts_cost: number | null
   labor_cost: number | null

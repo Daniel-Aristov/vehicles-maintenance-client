@@ -35,18 +35,17 @@
             {{ maintenanceRecord.mileage }} км
           </p>
         </div>
-        <div class="maintenance-card-details__field">
+        <div
+          v-if="maintenanceRecord.photos?.length"
+          class="maintenance-card-details__field"
+        >
           <p class="maintenance-card-details__label">Фотографии</p>
           <div class="maintenance-card-details__photos">
             <img
-              :src="photo1"
+              v-for="photo in maintenanceRecord.photos"
+              :key="photo.photo_path"
+              :src="'http://localhost:8000' + photo.photo_path"
               alt="Фотография"
-              class="maintenance-card-details__photo"
-            />
-            <img
-              :src="photo2"
-              alt="Фотография"
-              class="maintenance-card-details__photo"
             />
           </div>
         </div>
@@ -71,25 +70,28 @@
           </p>
         </div>
         <div class="maintenance-card-details__field">
-          <p class="maintenance-card-details__label">Итого</p>
+          <p class="maintenance-card-details__label">Итоговая стоимость</p>
           <p
             class="maintenance-card-details__value maintenance-card-details__total"
           >
             {{ maintenanceRecord.total_cost }} ₽
           </p>
         </div>
-        <div class="maintenance-card-details__field">
+        <div
+          v-if="maintenanceRecord.documents?.length"
+          class="maintenance-card-details__field"
+        >
           <p class="maintenance-card-details__label">Документы</p>
           <div class="maintenance-card-details__documents">
             <a
-              :href="checkPdf"
+              v-for="document in maintenanceRecord.documents"
+              :key="document.document_path"
+              :href="'http://localhost:8000' + document.document_path"
               target="_blank"
-              rel="noopener noreferrer"
               class="maintenance-card-details__document"
-              download="Чек работ.pdf"
             >
               <DocsIcon />
-              <span>Чек работ.pdf</span>
+              <span>{{ document.document_path.split('/').pop() }}</span>
             </a>
           </div>
         </div>
@@ -103,9 +105,6 @@ import { MaintenanceRecord } from '@/types/maintenace'
 import { computed } from 'vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import DocsIcon from '@/components/icons/DocsIcon.vue'
-import checkPdf from '@/assets/Чек работ.pdf'
-import photo1 from '@/assets/1.jpg'
-import photo2 from '@/assets/2.jpg'
 
 const props = defineProps<{
   maintenanceRecord: MaintenanceRecord
@@ -230,6 +229,31 @@ const getMaintenancePerformerLabel = computed(() => {
     height: 100px;
     object-fit: cover;
     border-radius: 12px;
+  }
+}
+
+.maintenance-card-details__document {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 10px 12px;
+  font-size: 15px;
+  background: #202020;
+  border-radius: 12px;
+  cursor: pointer;
+  max-width: 440px;
+
+  span {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
   }
 }
 </style>
