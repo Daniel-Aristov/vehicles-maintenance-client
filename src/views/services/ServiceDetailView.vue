@@ -69,7 +69,10 @@
       v-show="activeTab === 'clients'"
       class="service-detail__content-wrapper"
     >
-      <ServiceClientsList :service-id="Number(route.params.id)" />
+      <ServiceClientsList
+        :service-id="Number(route.params.id)"
+        :is-service-manager="isServiceManager"
+      />
     </div>
   </div>
 </template>
@@ -91,11 +94,30 @@ const userStore = useUserStore()
 
 const activeTab = ref('info')
 
-const tabs = [
+onMounted(() => {
+  servicesStore.getServiceWorkers(Number(route.params.id))
+  if (isServiceManager.value || isServiceWorker.value) {
+    servicesStore.getServiceClients(Number(route.params.id))
+  }
+})
+
+const allTabs = [
   { id: 'info', name: 'Информация о сервисе' },
   { id: 'workers', name: 'Работники' },
   { id: 'clients', name: 'Клиенты' }
 ]
+
+const tabs = computed(() => {
+  if (isServiceManager.value || isServiceWorker.value) {
+    return allTabs
+  }
+
+  if (isServiceClient.value) {
+    return allTabs.filter((tab) => tab.id !== 'clients')
+  }
+
+  return [allTabs[0], allTabs[1]]
+})
 
 const service = computed(() => {
   const id = Number(route.params.id)
@@ -103,14 +125,22 @@ const service = computed(() => {
 })
 
 onMounted(() => {
-  if (isServiceManager.value) {
-    servicesStore.getServiceWorkers(Number(route.params.id))
+  servicesStore.getServiceWorkers(Number(route.params.id))
+  if (isServiceManager.value || isServiceWorker.value) {
     servicesStore.getServiceClients(Number(route.params.id))
   }
 })
 
 const isServiceManager = computed(() => {
   return service.value?.manager_id === userStore.user?.id
+})
+
+const isServiceWorker = computed(() => {
+  return servicesStore.getWorkerServices.some((s) => s.id === service.value?.id)
+})
+
+const isServiceClient = computed(() => {
+  return servicesStore.getClientServices.some((s) => s.id === service.value?.id)
 })
 </script>
 

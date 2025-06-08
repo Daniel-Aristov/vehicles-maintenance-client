@@ -23,6 +23,7 @@
           <p class="client-card__email">{{ client.email }}</p>
           <p class="client-card__phone">{{ client.phone }}</p>
           <div
+            v-if="isServiceManager"
             @click.stop="togglePopMenu(client.id)"
             class="client-card__pop-menu"
           >
@@ -59,6 +60,7 @@ const servicesStore = useServicesStore()
 
 const props = defineProps<{
   serviceId: number
+  isServiceManager: boolean
 }>()
 
 const clients = computed(() => {
