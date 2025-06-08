@@ -90,7 +90,24 @@
             :options="maintenanceWorkersOptions"
             placeholder="Дополнительные работники"
             :disabled="!maintenanceRecord.responsible_id"
+            @update:modelValue="handleWorkerSelect"
           />
+          <div v-if="selectedWorkers.length" class="selected-workers">
+            <div
+              v-for="worker in selectedWorkers"
+              :key="worker.id"
+              class="worker-item"
+            >
+              <span>{{ worker.name }}</span>
+              <button
+                type="button"
+                @click="removeWorker(worker.id)"
+                class="remove-worker"
+              >
+                <CloseIcon color="#fff" />
+              </button>
+            </div>
+          </div>
           <div class="create-maintenance-form-devider"></div>
           <CustomInput
             v-model="maintenanceRecord.parts_cost"
@@ -164,6 +181,9 @@ import CustomSelect from '@/components/ui/CustomSelect.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import DocsIcon from '@/components/icons/DocsIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
+import { useUserStore } from '@/store/user.store'
+
+const userStore = useUserStore()
 
 const emit = defineEmits(['update:formVisible'])
 
@@ -177,7 +197,7 @@ const maintenanceRecord = ref({
   description: '',
   date: '',
   mileage: '',
-  responsible_id: 0,
+  responsible_id: userStore.user?.id || 0,
   service_workers_ids: '',
   parts_cost: '',
   labor_cost: ''
@@ -197,19 +217,22 @@ const maintenanceResponsibleWorkerOptions = computed(() => {
   ]
 })
 
+const selectedWorkers = ref<{ id: number; name: string }[]>([])
+
 const maintenanceWorkersOptions = computed(() => {
-  return [
-    ...servicesStore.serviceWorkers
-      .filter(
-        (worker) => worker.id !== Number(maintenanceRecord.value.responsible_id)
-      )
-      .map((worker) => ({
-        value: worker.id,
-        label: `${worker.last_name} ${worker.first_name} ${
-          worker.patronymic || ''
-        }`
-      }))
-  ]
+  const selectedIds = selectedWorkers.value.map((worker) => worker.id)
+  return servicesStore.serviceWorkers
+    .filter(
+      (worker) =>
+        worker.id !== Number(maintenanceRecord.value.responsible_id) &&
+        !selectedIds.includes(worker.id)
+    )
+    .map((worker) => ({
+      value: worker.id.toString(),
+      label: `${worker.last_name} ${worker.first_name} ${
+        worker.patronymic || ''
+      }`
+    }))
 })
 
 const selectedFiles = ref<File[]>([])
@@ -244,7 +267,7 @@ const handleSubmit = async () => {
       total_cost,
       documents: selectedFiles.value.length ? selectedFiles.value : null,
       photos: selectedImages.value.length ? selectedImages.value : null,
-      service_workers_ids: ''
+      service_workers_ids: maintenanceRecord.value.service_workers_ids
     })
     returnToHistory()
   } catch (error) {
@@ -259,10 +282,11 @@ const returnToHistory = () => {
     date: '',
     mileage: '',
     responsible_id: 0,
+    service_workers_ids: '',
     parts_cost: '',
-    labor_cost: '',
-    service_workers_ids: ''
+    labor_cost: ''
   }
+  selectedWorkers.value = []
   selectedFiles.value = []
   selectedImages.value = []
   emit('update:formVisible', false)
@@ -298,6 +322,32 @@ const handleImageSelect = (event: Event) => {
 const removeImage = (index: number) => {
   selectedImages.value = selectedImages.value.filter((_, i) => i !== index)
   imagesPreviews.value = imagesPreviews.value.filter((_, i) => i !== index)
+}
+
+const handleWorkerSelect = (value: string) => {
+  if (!value) return
+
+  const worker = servicesStore.serviceWorkers.find(
+    (w) => w.id.toString() === value
+  )
+  if (worker) {
+    selectedWorkers.value.push({
+      id: worker.id,
+      name: `${worker.last_name} ${worker.first_name} ${
+        worker.patronymic || ''
+      }`
+    })
+    maintenanceRecord.value.service_workers_ids = selectedWorkers.value
+      .map((w) => w.id)
+      .join(', ')
+  }
+}
+
+const removeWorker = (id: number) => {
+  selectedWorkers.value = selectedWorkers.value.filter((w) => w.id !== id)
+  maintenanceRecord.value.service_workers_ids = selectedWorkers.value
+    .map((w) => w.id)
+    .join(', ')
 }
 
 onMounted(async () => {
@@ -508,5 +558,36 @@ onMounted(async () => {
   width: 100%;
   height: 1px;
   background-color: #979797;
+}
+
+.selected-workers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.worker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #282b36;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.remove-worker {
+  background: #282828;
+  border-radius: 2px;
+  padding: 4px 6px;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    background: #222222;
+  }
 }
 </style>
