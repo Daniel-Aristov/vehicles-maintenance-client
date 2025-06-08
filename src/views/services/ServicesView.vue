@@ -117,7 +117,7 @@ onMounted(async () => {
   justify-content: start;
   gap: 10px;
   margin-bottom: 36px;
-  margin-left: 36px;
+  margin-left: 120px;
 }
 
 .tab-button {

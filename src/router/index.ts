@@ -1,6 +1,6 @@
 import MasterLayout from '@/components/layouts/MasterLayout.vue'
-import VehiclesLayout from '@/components/layouts/VehiclesLayout.vue'
 import ServicesLayout from '@/components/layouts/ServicesLayout.vue'
+import VehiclesLayout from '@/components/layouts/VehiclesLayout.vue'
 import { isAuthenticated } from '@/js/helpers/auth.helper'
 import LoginView from '@/views/auth/LoginView.vue'
 import RegisterView from '@/views/auth/RegisterView.vue'
@@ -72,6 +72,11 @@ const routes = [
             path: ':id',
             name: 'service-detail',
             component: () => import('@/views/services/ServiceDetailView.vue')
+          },
+          {
+            path: ':id/vehicles/:vehicleId',
+            name: 'service-client-vehicle',
+            component: () => import('@/views/vehicles/VehicleDetailView.vue')
           }
         ]
       }

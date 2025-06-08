@@ -57,6 +57,15 @@
             {{ getMaintenancePerformerLabel }}
           </p>
         </div>
+        <div
+          v-if="maintenanceRecord.responsible"
+          class="maintenance-card-details__field"
+        >
+          <p class="maintenance-card-details__label">Ответственный за работу</p>
+          <p class="maintenance-card-details__value">
+            {{ getMaintenanceResponsibleLabel }}
+          </p>
+        </div>
         <div class="maintenance-card-details__field">
           <p class="maintenance-card-details__label">Стоимость запчастей</p>
           <p class="maintenance-card-details__value">
@@ -105,6 +114,9 @@ import { MaintenanceRecord } from '@/types/maintenace'
 import { computed } from 'vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import DocsIcon from '@/components/icons/DocsIcon.vue'
+import { useServicesStore } from '@/store/services.store'
+
+const servicesStore = useServicesStore()
 
 const props = defineProps<{
   maintenanceRecord: MaintenanceRecord
@@ -123,10 +135,29 @@ const getMaintenancePerformerLabel = computed(() => {
     case 'unregistered_service':
       return 'Незарегистрированный сервис'
     case 'registered_service':
+      if (props.maintenanceRecord.service_id) {
+        return (
+          servicesStore.getServiceById(props.maintenanceRecord.service_id)
+            ?.name || 'Неизвестно'
+        )
+      }
       return 'Зарегистрированный сервис'
     default:
       return 'Неизвестно'
   }
+})
+
+const getMaintenanceResponsibleLabel = computed(() => {
+  if (props.maintenanceRecord.responsible) {
+    return (
+      props.maintenanceRecord.responsible.last_name +
+      ' ' +
+      props.maintenanceRecord.responsible.first_name +
+      ' ' +
+      props.maintenanceRecord.responsible.patronymic
+    )
+  }
+  return 'Работник сервиса'
 })
 </script>
 

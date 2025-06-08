@@ -31,13 +31,19 @@
 import { useVehicleStore } from '@/store/vehicle.store'
 import { useUserStore } from '@/store/user.store'
 import VehicleCard from '@/components/vehicles/VehicleCard.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 
 const router = useRouter()
 const vehicleStore = useVehicleStore()
 const userStore = useUserStore()
+
+onMounted(async () => {
+  if (userStore.user?.id) {
+    await vehicleStore.getVehiclesByOwnerId(userStore.user.id)
+  }
+})
 
 const vehicles = computed(() => vehicleStore.vehicles)
 const isOwner = computed(() => userStore.user?.roles.includes('owner'))

@@ -13,8 +13,14 @@
         <span>Добавить запись</span>
       </button>
     </div>
+    <CreateMaintenanceFormWorker
+      v-if="isFormVisible && isServiceContext"
+      :service-id="Number(route.params.id)"
+      :vehicle-id="vehicleId"
+      @update:formVisible="handleFormVisible"
+    />
     <CreateMaintenanceFormDriver
-      v-if="isFormVisible"
+      v-if="isFormVisible && !isServiceContext"
       :vehicle-id="vehicleId"
       @update:formVisible="handleFormVisible"
     />
@@ -47,11 +53,14 @@ import { onMounted, ref } from 'vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import MaintenanceCardHistory from '@/components/maintenance/MaintenanceCardHistory.vue'
 import CreateMaintenanceFormDriver from '@/components/maintenance/CreateMaintenanceFormDriver.vue'
+import CreateMaintenanceFormWorker from '@/components/maintenance/CreateMaintenanceFormWorker.vue'
 import MaintenanceCardDetails from '@/components/maintenance/MaintenanceCardDetails.vue'
 import { useMaintenanceStore } from '@/store/maintenace.store'
 import { MaintenanceRecord } from '@/types/maintenace'
+import { useRoute } from 'vue-router'
 
 const maintenanceStore = useMaintenanceStore()
+const route = useRoute()
 
 const emit = defineEmits(['update:formVisible', 'update:selectedRecord'])
 const isFormVisible = ref(false)
@@ -59,6 +68,7 @@ const selectedRecord = ref<MaintenanceRecord | null>(null)
 
 const props = defineProps<{
   vehicleId: number
+  isServiceContext: boolean
 }>()
 
 onMounted(async () => {

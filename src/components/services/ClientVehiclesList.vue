@@ -4,7 +4,12 @@
       <p>У клиента нет автомобилей</p>
     </div>
     <div v-else class="client-vehicles__list">
-      <div v-for="vehicle in vehicles" :key="vehicle.id" class="vehicle-card">
+      <div
+        v-for="vehicle in vehicles"
+        :key="vehicle.id"
+        class="vehicle-card"
+        @click="handleVehicleClick(vehicle.id)"
+      >
         <div class="vehicle-card__main">
           <div class="vehicle-card__name-wrapper">
             <p class="vehicle-card__name">
@@ -23,10 +28,24 @@
 
 <script setup lang="ts">
 import { Vehicle } from '@/types/vehicle.types'
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
 
 defineProps<{
   vehicles: Vehicle[]
 }>()
+
+const handleVehicleClick = (vehicleId: number) => {
+  router.push({
+    name: 'service-client-vehicle',
+    params: {
+      id: route.params.id,
+      vehicleId: vehicleId.toString()
+    }
+  })
+}
 </script>
 
 <style scoped>

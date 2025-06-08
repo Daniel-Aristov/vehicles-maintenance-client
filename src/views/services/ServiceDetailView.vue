@@ -126,11 +126,6 @@ const allTabs = [
 ]
 
 const tabs = computed(() => {
-  console.log(
-    isServiceManager.value,
-    isServiceWorker.value,
-    isServiceClient.value
-  )
   if (isServiceManager.value || isServiceWorker.value) {
     return allTabs
   }

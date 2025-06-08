@@ -71,9 +71,10 @@
       </div>
     </div>
     <MaintenanceHistory
-      :vehicle-id="Number(route.params.id)"
+      :vehicle-id="Number(route.params.vehicleId || route.params.id)"
       @update:formVisible="isMaintenanceFormVisible = $event"
       @update:selectedRecord="isMaintenanceFormVisible = $event"
+      :is-service-context="isServiceContext"
     />
     <ChangeOwnerModal
       :is-open="isChangeOwnerModalOpen"
@@ -96,9 +97,10 @@ const vehicleStore = useVehicleStore()
 
 const isMaintenanceFormVisible = ref(false)
 const isChangeOwnerModalOpen = ref(false)
+const isServiceContext = computed(() => route.name === 'service-client-vehicle')
 
 const vehicle = computed(() => {
-  const id = Number(route.params.id)
+  const id = Number(route.params.vehicleId || route.params.id)
   return vehicleStore.getVehicleById(id)
 })
 
