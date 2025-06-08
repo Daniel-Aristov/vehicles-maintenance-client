@@ -22,8 +22,19 @@
           </div>
           <p class="client-card__email">{{ client.email }}</p>
           <p class="client-card__phone">{{ client.phone }}</p>
-          <div class="client-card__pop-menu">
-            <PopMenuIcon />
+          <div
+            @click.stop="togglePopMenu(client.id)"
+            class="client-card__pop-menu"
+          >
+            <div>
+              <PopMenuIcon />
+            </div>
+            <PopMenu
+              :is-open="activePopMenuId === client.id"
+              :items="menuItems"
+              @dismiss="handleDismissClient(client.id)"
+              @update:is-open="() => (activePopMenuId = null)"
+            />
           </div>
         </div>
       </div>
@@ -42,6 +53,7 @@ import InviteClientModal from '@/components/services/InviteClientModal.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useServicesStore } from '@/store/services.store'
 import PopMenuIcon from '@/components/icons/PopMenuIcon.vue'
+import PopMenu from '@/components/common/PopMenu.vue'
 
 const servicesStore = useServicesStore()
 
@@ -54,9 +66,28 @@ const clients = computed(() => {
 })
 
 const isModalOpen = ref(false)
+const activePopMenuId = ref<number | null>(null)
+
+const menuItems = [
+  {
+    id: 'dismiss',
+    label: 'Удалить',
+    action: 'dismiss',
+    type: 'danger' as const
+  }
+]
 
 const handleInviteClient = (data: { email: string }) => {
   servicesStore.inviteClient({ email: data.email }, props.serviceId)
+}
+
+const handleDismissClient = (clientId: number) => {
+  servicesStore.dismissClient(clientId, props.serviceId)
+  activePopMenuId.value = null
+}
+
+const togglePopMenu = (clientId: number) => {
+  activePopMenuId.value = activePopMenuId.value === clientId ? null : clientId
 }
 </script>
 
@@ -130,7 +161,6 @@ const handleInviteClient = (data: { email: string }) => {
 
 .clients-list__content {
   max-height: 70vh;
-  overflow-y: auto;
 }
 
 .client-card__email,
@@ -144,8 +174,8 @@ const handleInviteClient = (data: { email: string }) => {
   right: 25px;
   top: 14px;
   cursor: pointer;
-  width: 22px;
-  height: 24px;
+  width: 26px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,7 +184,7 @@ const handleInviteClient = (data: { email: string }) => {
 
   svg {
     width: 4px;
-    height: 20px;
+    height: 16px;
   }
 
   &:hover {

@@ -22,8 +22,21 @@
           </div>
           <p class="worker-card__email">{{ worker.email }}</p>
           <p class="worker-card__phone">{{ worker.phone }}</p>
-          <div class="worker-card__pop-menu">
-            <PopMenuIcon />
+          <p class="worker-card__position">{{ worker.position }}</p>
+          <div
+            v-if="isServiceManager"
+            @click.stop="togglePopMenu(worker.id)"
+            class="worker-card__pop-menu"
+          >
+            <div>
+              <PopMenuIcon />
+            </div>
+            <PopMenu
+              :is-open="activePopMenuId === worker.id"
+              :items="menuItems"
+              @dismiss="handleDismissWorker(worker.id)"
+              @update:is-open="() => (activePopMenuId = null)"
+            />
           </div>
         </div>
       </div>
@@ -42,21 +55,42 @@ import InviteWorkerModal from '@/components/services/InviteWorkerModal.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useServicesStore } from '@/store/services.store'
 import PopMenuIcon from '@/components/icons/PopMenuIcon.vue'
+import PopMenu from '@/components/common/PopMenu.vue'
 
 const servicesStore = useServicesStore()
 
 const props = defineProps<{
   serviceId: number
+  isServiceManager: boolean
 }>()
 
 const isModalOpen = ref(false)
+const activePopMenuId = ref<number | null>(null)
 
 const workers = computed(() => {
   return servicesStore.serviceWorkers
 })
 
+const menuItems = [
+  {
+    id: 'dismiss',
+    label: 'Уволить',
+    action: 'dismiss',
+    type: 'danger' as const
+  }
+]
+
 const handleInviteWorker = (data: { email: string; position: string }) => {
   servicesStore.inviteWorker(data, props.serviceId)
+}
+
+const handleDismissWorker = (workerId: number) => {
+  servicesStore.dismissWorker(props.serviceId, workerId)
+  activePopMenuId.value = null
+}
+
+const togglePopMenu = (workerId: number) => {
+  activePopMenuId.value = activePopMenuId.value === workerId ? null : workerId
 }
 </script>
 
@@ -103,7 +137,6 @@ const handleInviteWorker = (data: { email: string; position: string }) => {
 
 .workers-list__content {
   max-height: 70vh;
-  overflow-y: auto;
 }
 
 .worker-card__email,
@@ -117,8 +150,8 @@ const handleInviteWorker = (data: { email: string; position: string }) => {
   right: 25px;
   top: 14px;
   cursor: pointer;
-  width: 22px;
-  height: 24px;
+  width: 26px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -127,7 +160,7 @@ const handleInviteWorker = (data: { email: string; position: string }) => {
 
   svg {
     width: 4px;
-    height: 20px;
+    height: 16px;
   }
 
   &:hover {

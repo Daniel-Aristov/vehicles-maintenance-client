@@ -1,6 +1,6 @@
 <template>
   <div class="service-detail">
-    <div class="tabs" v-if="isServiceManager">
+    <div class="tabs">
       <button
         v-for="tab in tabs"
         :key="tab.id"
@@ -10,14 +10,8 @@
         {{ tab.name }}
       </button>
     </div>
-
     <div v-show="activeTab === 'info'" class="service-detail__content-wrapper">
       <div class="service-detail__header">
-        <img
-          class="service-detail__header-image"
-          src="@/assets/images/service-default.jpg"
-          alt="service"
-        />
         <div>
           <h1 class="service-detail__title">{{ service?.name }}</h1>
           <div class="service-detail__info">
@@ -65,7 +59,10 @@
       v-show="activeTab === 'workers'"
       class="service-detail__content-wrapper"
     >
-      <ServiceWorkersList :service-id="Number(route.params.id)" />
+      <ServiceWorkersList
+        :service-id="Number(route.params.id)"
+        :is-service-manager="isServiceManager"
+      />
     </div>
 
     <div
@@ -236,6 +233,7 @@ const isServiceManager = computed(() => {
 
   .label {
     font-weight: 600;
+    margin-right: 8px;
   }
 }
 </style>

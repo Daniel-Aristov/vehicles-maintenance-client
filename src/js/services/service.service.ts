@@ -101,6 +101,16 @@ export class ServiceService {
     }
   }
 
+  static async dismissClient(serviceId: number, clientId: number) {
+    try {
+      await axiosInstance.delete<void>(
+        `${API_URL}/${serviceId}/clients/${clientId}`
+      )
+    } catch (error) {
+      throw new Error('Произошла ошибка при исключении клиента')
+    }
+  }
+
   static async inviteWorker(data: InviteWorkerDto, serviceId: number) {
     try {
       await axiosInstance.post<void>(
@@ -109,6 +119,16 @@ export class ServiceService {
       )
     } catch (error) {
       throw new Error('Произошла ошибка при отправке письма работнику')
+    }
+  }
+
+  static async dismissWorker(serviceId: number, workerId: number) {
+    try {
+      await axiosInstance.delete<void>(
+        `${API_URL}/${serviceId}/workers/${workerId}`
+      )
+    } catch (error) {
+      throw new Error('Произошла ошибка при увольнении работника')
     }
   }
 }

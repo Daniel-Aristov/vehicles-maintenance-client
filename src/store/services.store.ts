@@ -84,6 +84,16 @@ export const useServicesStore = defineStore('services', {
         throw new Error('Произошла ошибка при отправке письма работнику')
       }
     },
+    async dismissWorker(serviceId: number, workerId: number) {
+      try {
+        await ServiceService.dismissWorker(serviceId, workerId)
+        this.serviceWorkers = this.serviceWorkers.filter(
+          (worker) => worker.id !== workerId
+        )
+      } catch (error) {
+        throw new Error('Произошла ошибка при увольнении работника')
+      }
+    },
     async getServiceClients(serviceId: number) {
       try {
         const clients = await ServiceService.getServiceClients(serviceId)
@@ -97,6 +107,16 @@ export const useServicesStore = defineStore('services', {
         await ServiceService.inviteClient(data, serviceId)
       } catch (error) {
         throw new Error('Произошла ошибка при отправке письма клиенту')
+      }
+    },
+    async dismissClient(clientId: number, serviceId: number) {
+      try {
+        await ServiceService.dismissClient(serviceId, clientId)
+        this.serviceClients = this.serviceClients.filter(
+          (client) => client.id !== clientId
+        )
+      } catch (error) {
+        throw new Error('Произошла ошибка при исключении клиента')
       }
     }
   }
