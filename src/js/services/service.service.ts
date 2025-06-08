@@ -5,6 +5,7 @@ import {
   ServiceClientResponse,
   ServiceResponse,
   ServiceWorkerResponse,
+  UpdateServiceDto,
   VerifyInnOgrnDto,
   VerifyInnOgrnResponse
 } from '@/js/models/services.dto'
@@ -33,14 +34,15 @@ export class ServiceService {
     }
   }
 
-  static async getServicesByCurrentManager() {
+  static async updateService(serviceId: number, data: UpdateServiceDto) {
     try {
-      const response = await axiosInstance.get<ServiceResponse[]>(
-        `${API_URL}/me`
+      const response = await axiosInstance.patch<ServiceResponse>(
+        `${API_URL}/${serviceId}`,
+        data
       )
       return response.data
     } catch (error) {
-      throw new Error('Произошла ошибка при получении автосервисов')
+      throw new Error('Произошла ошибка при обновлении автосервиса')
     }
   }
 

@@ -1,7 +1,8 @@
 import {
   CreateServiceDto,
   InviteClientDto,
-  InviteWorkerDto
+  InviteWorkerDto,
+  UpdateServiceDto
 } from '@/js/models/services.dto'
 import { ServiceService } from '@/js/services/service.service'
 import { useUserStore } from '@/store/user.store'
@@ -115,6 +116,25 @@ export const useServicesStore = defineStore('services', {
       } catch (error) {
         throw new Error('Произошла ошибка при проверке ИНН и ОГРН')
       }
+    },
+    async updateService(serviceId: number, data: UpdateServiceDto) {
+      try {
+        const updatedService = await ServiceService.updateService(
+          serviceId,
+          data
+        )
+        this.updateServiceLocal(updatedService)
+      } catch (error) {
+        throw new Error('Произошла ошибка при обновлении автосервиса')
+      }
+    },
+    updateServiceLocal(service: Service) {
+      this.allServices = this.allServices.map((s) =>
+        s.id === service.id ? service : s
+      )
+      this.servicesWithCurrentManager = this.servicesWithCurrentManager.map(
+        (s) => (s.id === service.id ? service : s)
+      )
     },
     async getServiceWorkers(serviceId: number) {
       try {

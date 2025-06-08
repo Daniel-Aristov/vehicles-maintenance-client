@@ -13,7 +13,16 @@
     <div v-show="activeTab === 'info'" class="service-detail__content-wrapper">
       <div class="service-detail__header">
         <div>
-          <h1 class="service-detail__title">{{ service?.name }}</h1>
+          <div class="service-detail__header-title">
+            <h2 class="service-detail__title">{{ service?.name }}</h2>
+            <button
+              v-if="isServiceManager"
+              class="service-detail__header-title-button"
+              @click="isEditServiceModalOpen = true"
+            >
+              <EditIcon />
+            </button>
+          </div>
           <div class="service-detail__info">
             <div class="service-detail__info-item">
               <AdressIcon />
@@ -74,6 +83,11 @@
         :is-service-manager="isServiceManager"
       />
     </div>
+    <EditServiceModal
+      v-model="isEditServiceModalOpen"
+      :service="service || null"
+      @update-service="handleUpdateService"
+    />
   </div>
 </template>
 
@@ -87,12 +101,16 @@ import AdressIcon from '@/components/icons/AdressIcon.vue'
 import InternetIcon from '@/components/icons/InternetIcon.vue'
 import ServiceWorkersList from '@/components/services/ServiceWorkersList.vue'
 import ServiceClientsList from '@/components/services/ServiceClientsList.vue'
+import EditServiceModal from '@/components/services/EditServiceModal.vue'
+import EditIcon from '@/components/icons/EditIcon.vue'
+import { UpdateServiceDto } from '@/js/models/services.dto'
 
 const route = useRoute()
 const servicesStore = useServicesStore()
 const userStore = useUserStore()
 
 const activeTab = ref('info')
+const isEditServiceModalOpen = ref(false)
 
 onMounted(() => {
   servicesStore.getServiceWorkers(Number(route.params.id))
@@ -142,6 +160,11 @@ const isServiceWorker = computed(() => {
 const isServiceClient = computed(() => {
   return servicesStore.getClientServices.some((s) => s.id === service.value?.id)
 })
+
+const handleUpdateService = async (data: UpdateServiceDto) => {
+  if (!service.value) return
+  await servicesStore.updateService(service.value.id, data)
+}
 </script>
 
 <style scoped>
@@ -174,6 +197,29 @@ const isServiceClient = computed(() => {
   }
 }
 
+.service-detail__header-title {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  button {
+    background-color: #101935;
+    padding: 10px;
+    max-height: 40px;
+
+    &:hover {
+      background-color: #132974;
+    }
+  }
+}
+
 .service-detail__content-wrapper {
   background-color: #090f23;
   border-radius: 12px;
@@ -193,12 +239,6 @@ const isServiceClient = computed(() => {
   max-height: 160px;
   border-radius: 6px;
   object-fit: cover;
-}
-
-.service-detail__title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
 }
 
 .service-detail__info {

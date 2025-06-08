@@ -36,6 +36,14 @@ export class ServiceWorkerResponse {
   rating: number
 }
 
+export class UpdateServiceDto {
+  commercial_name?: string | null
+  address?: string | null
+  summary?: string | null
+  timetable?: string | null
+  website?: string | null
+}
+
 export class ServiceClientResponse {
   id: number
   last_name: string

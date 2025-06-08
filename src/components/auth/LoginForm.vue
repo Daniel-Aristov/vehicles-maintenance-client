@@ -26,7 +26,6 @@
       <router-link to="/register" class="login-form__link"
         >Нет учетной записи? Зарегистрируйтесь</router-link
       >
-      <router-link to="#" class="login-form__link">Забыли пароль?</router-link>
     </div>
   </div>
 </template>
