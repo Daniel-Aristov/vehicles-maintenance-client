@@ -33,7 +33,11 @@
             </p>
           </div>
         </div>
-        <button class="change-owner-button" @click="openChangeOwnerModal">
+        <button
+          v-if="!isServiceContext"
+          class="change-owner-button"
+          @click="openChangeOwnerModal"
+        >
           <ChangeOwnerIcon />
         </button>
       </div>
