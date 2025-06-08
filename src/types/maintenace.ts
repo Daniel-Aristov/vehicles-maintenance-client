@@ -1,6 +1,7 @@
 import { ServiceWorker } from '@/types/service.types'
 
 export interface MaintenanceRecord {
+  id: number
   title: string
   maintenance_performer: MaintenancePerformer
   date: string

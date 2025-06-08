@@ -41,6 +41,13 @@
         </p>
       </div>
     </div>
+    <button
+      v-if="showGenerateButton"
+      class="maintenance-card-details__generate-button"
+      @click="handleGeneratePurchaseOrder"
+    >
+      Сгенерировать накладную
+    </button>
   </div>
 </template>
 
@@ -52,8 +59,12 @@ import DateIcon from '@/components/icons/DateIcon.vue'
 import ServiceIcon from '@/components/icons/ServiceIcon.vue'
 import AdressIcon from '@/components/icons/AdressIcon.vue'
 import { useServicesStore } from '@/store/services.store'
+import { useMaintenanceStore } from '@/store/maintenace.store'
+import { useRoute } from 'vue-router'
 
 const serviceStore = useServicesStore()
+const maintenanceStore = useMaintenanceStore()
+const route = useRoute()
 
 const props = defineProps<{
   maintenanceRecord: MaintenanceRecord
@@ -77,6 +88,20 @@ const serviceName = computed(() => {
 const serviceAddress = computed(() => {
   return service?.value?.address
 })
+
+const showGenerateButton = computed(() => {
+  return (
+    props.maintenanceRecord.maintenance_performer === 'registered_service' &&
+    props.maintenanceRecord.service_id === Number(route.params.id)
+  )
+})
+
+const handleGeneratePurchaseOrder = async (event: Event) => {
+  event.stopPropagation()
+  await maintenanceStore.getMaintenancePurchaseOrders(
+    props.maintenanceRecord.id
+  )
+}
 </script>
 
 <style scoped>
@@ -150,5 +175,21 @@ const serviceAddress = computed(() => {
 
 .maintenance-card-history__service {
   font-weight: 500;
+}
+
+.maintenance-card-details__generate-button {
+  background: none;
+  margin-top: 12px;
+  max-width: 280px;
+  padding: 8px 16px;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
 </style>

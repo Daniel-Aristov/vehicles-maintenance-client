@@ -2,6 +2,7 @@ import { ServiceWorkerResponse } from '@/js/models/services.dto'
 import { MaintenancePerformer } from '@/types/maintenace'
 
 export interface MaintenanceRecordResponse {
+  id: number
   title: string
   maintenance_performer: MaintenancePerformer
   date: string

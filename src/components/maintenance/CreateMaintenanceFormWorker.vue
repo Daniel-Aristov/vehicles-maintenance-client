@@ -83,9 +83,6 @@
             class="create-maintenance-form__select-performer"
             :options="maintenanceResponsibleWorkerOptions"
             placeholder="Ответственный за работу"
-            @update:modelValue="
-              $emit('selectMaintenanceResponsibleWorker', $event)
-            "
           />
           <CustomSelect
             v-model="maintenanceRecord.service_workers_ids"
@@ -93,7 +90,6 @@
             :options="maintenanceWorkersOptions"
             placeholder="Дополнительные работники"
             :disabled="!maintenanceRecord.responsible_id"
-            @update:modelValue="$emit('selectMaintenanceWorkers', $event)"
           />
           <div class="create-maintenance-form-devider"></div>
           <CustomInput
@@ -169,11 +165,7 @@ import PlusIcon from '@/components/icons/PlusIcon.vue'
 import DocsIcon from '@/components/icons/DocsIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 
-const emit = defineEmits([
-  'update:formVisible',
-  'selectMaintenanceResponsibleWorker',
-  'selectMaintenanceWorkers'
-])
+const emit = defineEmits(['update:formVisible'])
 
 const props = defineProps<{
   serviceId: number

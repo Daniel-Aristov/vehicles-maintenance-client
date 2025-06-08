@@ -83,7 +83,6 @@
             class="create-maintenance-form__select-performer"
             :options="maintenancePerformerOptions"
             placeholder="Ответственный за работу"
-            @update:modelValue="$emit('selectMaintenancePerformer', $event)"
           />
           <CustomInput
             v-model="maintenanceRecord.parts_cost"
@@ -160,7 +159,7 @@ import PlusIcon from '@/components/icons/PlusIcon.vue'
 import DocsIcon from '@/components/icons/DocsIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 
-const emit = defineEmits(['update:formVisible', 'selectMaintenancePerformer'])
+const emit = defineEmits(['update:formVisible'])
 
 const props = defineProps<{
   vehicleId: number
