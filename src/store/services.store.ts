@@ -16,26 +16,63 @@ import { defineStore } from 'pinia'
 export const useServicesStore = defineStore('services', {
   state: () => ({
     allServices: [] as Service[],
+    servicesWithCurrentManager: [] as Service[],
+    servicesWithCurrentClient: [] as Service[],
+    servicesWithCurrentWorker: [] as Service[],
     serviceClients: [] as ServiceClient[],
     serviceWorkers: [] as ServiceWorker[]
   }),
   getters: {
-    getAllServices: (state) => state.allServices,
-    getCurrentUserServices: (state) => {
-      const userStore = useUserStore()
-      return state.allServices.filter(
-        (service) => service.manager_id === userStore.user?.id
-      )
-    },
     getServiceById: (state) => (id: number) => {
       return state.allServices.find((service) => service.id === id)
-    }
+    },
+    getAllServices: (state) => state.allServices,
+    getManagerServices: (state) => state.servicesWithCurrentManager,
+    getWorkerServices: (state) => state.servicesWithCurrentWorker,
+    getClientServices: (state) => state.servicesWithCurrentClient
   },
   actions: {
     async getServices() {
       try {
         const data = await ServiceService.getServices()
         this.allServices = data
+      } catch (error) {
+        throw new Error('Произошла ошибка при получении автосервисов')
+      }
+    },
+    async getServicesWithCurrentManager() {
+      const userStore = useUserStore()
+      if (!userStore.user?.id) {
+        throw new Error('Пользователь не авторизован')
+      }
+      this.servicesWithCurrentManager = this.allServices.filter(
+        (service) => service.manager_id === userStore.user?.id
+      )
+    },
+    async getServicesWithCurrentClient() {
+      const userStore = useUserStore()
+      if (!userStore.user?.id) {
+        throw new Error('Пользователь не авторизован')
+      }
+      try {
+        const services = await ServiceService.getServicesByCurrentClient(
+          userStore.user?.id
+        )
+        this.servicesWithCurrentClient = services
+      } catch (error) {
+        throw new Error('Произошла ошибка при получении автосервисов')
+      }
+    },
+    async getServicesWithCurrentWorker() {
+      const userStore = useUserStore()
+      if (!userStore.user?.id) {
+        throw new Error('Пользователь не авторизован')
+      }
+      try {
+        const services = await ServiceService.getServicesByCurrentWorker(
+          userStore.user.id
+        )
+        this.servicesWithCurrentWorker = services
       } catch (error) {
         throw new Error('Произошла ошибка при получении автосервисов')
       }

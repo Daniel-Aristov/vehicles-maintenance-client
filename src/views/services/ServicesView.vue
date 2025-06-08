@@ -8,14 +8,39 @@
         Все сервисы
       </button>
       <button
-        :class="['tab-button', { active: activeTab === 'my' }]"
-        @click="activeTab = 'my'"
+        :class="['tab-button', { active: activeTab === 'manager' }]"
+        @click="activeTab = 'manager'"
       >
-        Мои сервисы
+        Я владелец
+      </button>
+      <button
+        :class="['tab-button', { active: activeTab === 'worker' }]"
+        @click="activeTab = 'worker'"
+      >
+        Я работник
+      </button>
+      <button
+        :class="['tab-button', { active: activeTab === 'client' }]"
+        @click="activeTab = 'client'"
+      >
+        Я клиент
       </button>
     </div>
     <div class="services-list">
+      <div v-if="!displayedServices.length" class="no-services">
+        <p v-if="activeTab === 'all'">Автосервисы не найдены</p>
+        <p v-else-if="activeTab === 'manager'">
+          Вы не являетесь владельцем ни одного автосервиса
+        </p>
+        <p v-else-if="activeTab === 'worker'">
+          Вы не работаете ни в одном автосервисе
+        </p>
+        <p v-else-if="activeTab === 'client'">
+          Вы не являетесь клиентом ни одного автосервиса
+        </p>
+      </div>
       <ServiceCard
+        v-else
         v-for="service in displayedServices"
         :key="service.id"
         :service="service"
@@ -29,6 +54,7 @@ import { ref, inject, watch, computed, onMounted } from 'vue'
 import { useServicesStore } from '@/store/services.store'
 import ServiceCard from '@/components/services/ServiceCard.vue'
 import { Ref } from 'vue'
+import { Service } from '@/types/service.types'
 
 const servicesStore = useServicesStore()
 const activeTab = ref('all')
@@ -40,10 +66,22 @@ watch(searchText, (newValue) => {
 })
 
 const displayedServices = computed(() => {
-  let services =
-    activeTab.value === 'all'
-      ? servicesStore.getAllServices
-      : servicesStore.getCurrentUserServices
+  let services: Service[] = []
+
+  switch (activeTab.value) {
+    case 'all':
+      services = servicesStore.getAllServices
+      break
+    case 'manager':
+      services = servicesStore.getManagerServices
+      break
+    case 'worker':
+      services = servicesStore.getWorkerServices
+      break
+    case 'client':
+      services = servicesStore.getClientServices
+      break
+  }
 
   if (searchQuery.value) {
     services = services.filter((service) =>
@@ -56,6 +94,9 @@ const displayedServices = computed(() => {
 
 onMounted(async () => {
   await servicesStore.getServices()
+  await servicesStore.getServicesWithCurrentManager()
+  await servicesStore.getServicesWithCurrentWorker()
+  await servicesStore.getServicesWithCurrentClient()
 })
 </script>
 
@@ -85,7 +126,7 @@ onMounted(async () => {
   font-size: 15px;
   font-weight: 500;
   border-radius: 8px;
-  min-width: 220px;
+  min-width: 150px;
   cursor: pointer;
   color: white;
   background-color: rgba(116, 116, 116, 0.5);
@@ -94,5 +135,12 @@ onMounted(async () => {
   &.active {
     background-color: #132974;
   }
+}
+
+.no-services {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-top: 40px;
 }
 </style>

@@ -44,6 +44,28 @@ export class ServiceService {
     }
   }
 
+  static async getServicesByCurrentClient(clientId: number) {
+    try {
+      const response = await axiosInstance.get<ServiceResponse[]>(
+        `${API_URL}?client_id=${clientId}`
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при получении автосервисов')
+    }
+  }
+
+  static async getServicesByCurrentWorker(workerId: number) {
+    try {
+      const response = await axiosInstance.get<ServiceResponse[]>(
+        `${API_URL}?worker_id=${workerId}`
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при получении автосервисов')
+    }
+  }
+
   static async createService(CreateServiceData: CreateServiceDto) {
     try {
       const response = await axiosInstance.post<ServiceResponse>(
