@@ -27,7 +27,7 @@
               <CustomInput
                 v-model="maintenanceRecord.mileage"
                 label="Пробег на время выполнения"
-                placeholder="Пробег на время выполнения"
+                placeholder="Пробег"
                 type="number"
               />
             </div>
@@ -170,10 +170,10 @@ const maintenanceRecord = ref({
   title: '',
   description: '',
   date: '',
-  mileage: 0,
+  mileage: '',
   maintenance_performer: '' as MaintenancePerformer,
-  parts_cost: 0,
-  labor_cost: 0
+  parts_cost: '',
+  labor_cost: ''
 })
 
 const maintenanceStore = useMaintenanceStore()
@@ -192,7 +192,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const isFormValid = computed(() => {
   return (
     maintenanceRecord.value.title &&
-    maintenanceRecord.value.mileage > 0 &&
+    Number(maintenanceRecord.value.mileage) > 0 &&
     maintenanceRecord.value.maintenance_performer &&
     maintenanceRecord.value.date
   )
@@ -206,6 +206,9 @@ const handleSubmit = async () => {
   try {
     await maintenanceStore.createMaintenanceRecord({
       ...maintenanceRecord.value,
+      mileage: Number(maintenanceRecord.value.mileage),
+      parts_cost: Number(maintenanceRecord.value.parts_cost),
+      labor_cost: Number(maintenanceRecord.value.labor_cost),
       vehicle_id: props.vehicleId,
       total_cost,
       documents: selectedFiles.value.length ? selectedFiles.value : null,
@@ -223,10 +226,10 @@ const returnToHistory = () => {
     title: '',
     description: '',
     date: '',
-    mileage: 0,
+    mileage: '',
     maintenance_performer: '' as MaintenancePerformerDriver,
-    parts_cost: 0,
-    labor_cost: 0
+    parts_cost: '',
+    labor_cost: ''
   }
   selectedFiles.value = []
   selectedImages.value = []
