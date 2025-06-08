@@ -49,9 +49,23 @@ export class MaintenanceService {
 
   static async getMaintenancePurchaseOrders(maintenanceOrderId: number) {
     try {
-      await axiosInstance.post<void>(
-        `${API_URL}/${maintenanceOrderId}/purchase-orders`
+      const response = await axiosInstance.post(
+        `${API_URL}/${maintenanceOrderId}/purchase-orders`,
+        {},
+        {
+          responseType: 'blob'
+        }
       )
+
+      const url = window.URL.createObjectURL(response.data)
+
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `purchase-order-${maintenanceOrderId}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
     } catch (error) {
       throw new Error('Произошла ошибка при получении накладной')
     }
