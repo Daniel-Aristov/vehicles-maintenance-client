@@ -39,7 +39,7 @@ const router = useRouter()
 const vehicleStore = useVehicleStore()
 const userStore = useUserStore()
 
-const vehicles = computed(() => vehicleStore.vehiclesCurrentUser)
+const vehicles = computed(() => vehicleStore.vehicles)
 const isOwner = computed(() => userStore.user?.roles.includes('owner'))
 
 const becomeOwner = async () => {

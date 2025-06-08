@@ -14,10 +14,10 @@ import { MaintenanceRecordResponse } from '@/js/models/maintenance.dto'
 const API_URL = '/vehicles'
 
 export class VehicleService {
-  static async getVehiclesByCurrentUser() {
+  static async getVehiclesByOwnerId(ownerId: number) {
     try {
       const response = await axiosInstance.get<VehicleResponse[]>(
-        `${API_URL}/me`
+        `${API_URL}?owner_id=${ownerId}`
       )
       return response.data
     } catch (error) {

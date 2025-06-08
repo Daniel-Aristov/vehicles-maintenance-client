@@ -45,8 +45,11 @@ onMounted(async () => {
     isLoading.value = true
     emit('update:loading', true)
     await userStore.getCurrentUser()
-    await serviceStore.getServices()
-    await vehicleStore.getVehiclesByCurrentUser()
+
+    if (userStore.user?.id) {
+      await serviceStore.getServices()
+      await vehicleStore.getVehiclesByOwnerId(userStore.user.id)
+    }
   } finally {
     isLoading.value = false
     emit('update:loading', false)

@@ -13,7 +13,7 @@ import { useUserStore } from '@/store/user.store'
 
 export const useVehicleStore = defineStore('vehicle', {
   state: () => ({
-    vehiclesCurrentUser: [] as Vehicle[],
+    vehicles: [] as Vehicle[],
     makes: [] as Make[],
     models: [] as Model[],
     ranges: [] as Range[],
@@ -22,13 +22,13 @@ export const useVehicleStore = defineStore('vehicle', {
   }),
   getters: {
     getVehicleById: (state) => (id: number) => {
-      return state.vehiclesCurrentUser.find((vehicle) => vehicle.id === id)
+      return state.vehicles.find((vehicle) => vehicle.id === id)
     }
   },
   actions: {
-    async getVehiclesByCurrentUser() {
-      const vehicles = await VehicleService.getVehiclesByCurrentUser()
-      this.vehiclesCurrentUser = vehicles
+    async getVehiclesByOwnerId(ownerId: number) {
+      const vehicles = await VehicleService.getVehiclesByOwnerId(ownerId)
+      this.vehicles = vehicles
     },
     async createVehicle(vehicle: CreateVehicleDto) {
       try {
@@ -43,7 +43,7 @@ export const useVehicleStore = defineStore('vehicle', {
         }
 
         const newVehicle = await VehicleService.createVehicle(vehicle)
-        this.vehiclesCurrentUser?.push(newVehicle)
+        this.vehicles?.push(newVehicle)
       } catch (error) {
         console.error(error)
       }
