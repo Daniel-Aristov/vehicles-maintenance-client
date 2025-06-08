@@ -12,31 +12,40 @@
         <p>Список клиентов пуст</p>
       </div>
       <div v-else class="clients-list__items">
-        <div v-for="client in clients" :key="client.id" class="client-card">
-          <div class="client-card__name">
-            <img src="@/assets/images/avatar-default.png" alt="client-avatar" />
-            <p class="client-card__name">
-              {{ client.last_name }} {{ client.first_name }}
-              {{ client.patronymic }}
-            </p>
-          </div>
-          <p class="client-card__email">{{ client.email }}</p>
-          <p class="client-card__phone">{{ client.phone }}</p>
-          <div
-            v-if="isServiceManager"
-            @click.stop="togglePopMenu(client.id)"
-            class="client-card__pop-menu"
-          >
-            <div>
-              <PopMenuIcon />
+        <div v-for="client in clients" :key="client.id">
+          <div class="client-card" @click="handleClientClick(client.id)">
+            <div class="client-card__name">
+              <img
+                src="@/assets/images/avatar-default.png"
+                alt="client-avatar"
+              />
+              <p class="client-card__name-wrapper">
+                {{ client.last_name }} {{ client.first_name }}
+                {{ client.patronymic }}
+              </p>
             </div>
-            <PopMenu
-              :is-open="activePopMenuId === client.id"
-              :items="menuItems"
-              @dismiss="handleDismissClient(client.id)"
-              @update:is-open="() => (activePopMenuId = null)"
-            />
+            <p class="client-card__email">{{ client.email }}</p>
+            <p class="client-card__phone">{{ client.phone }}</p>
+            <div
+              v-if="isServiceManager"
+              @click.stop="togglePopMenu(client.id)"
+              class="client-card__pop-menu"
+            >
+              <div>
+                <PopMenuIcon />
+              </div>
+              <PopMenu
+                :is-open="activePopMenuId === client.id"
+                :items="menuItems"
+                @dismiss="handleDismissClient(client.id)"
+                @update:is-open="() => (activePopMenuId = null)"
+              />
+            </div>
           </div>
+          <ClientVehiclesList
+            v-if="activeClientId === client.id && !isLoadingVehicles"
+            :vehicles="vehicles"
+          />
         </div>
       </div>
     </div>
@@ -55,8 +64,11 @@ import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useServicesStore } from '@/store/services.store'
 import PopMenuIcon from '@/components/icons/PopMenuIcon.vue'
 import PopMenu from '@/components/common/PopMenu.vue'
+import ClientVehiclesList from '@/components/services/ClientVehiclesList.vue'
+import { useVehicleStore } from '@/store/vehicle.store'
 
 const servicesStore = useServicesStore()
+const vehicleStore = useVehicleStore()
 
 const props = defineProps<{
   serviceId: number
@@ -69,6 +81,9 @@ const clients = computed(() => {
 
 const isModalOpen = ref(false)
 const activePopMenuId = ref<number | null>(null)
+const activeClientId = ref<number | null>(null)
+const isLoadingVehicles = ref(false)
+const vehicles = computed(() => vehicleStore.vehicles)
 
 const menuItems = [
   {
@@ -90,6 +105,21 @@ const handleDismissClient = (clientId: number) => {
 
 const togglePopMenu = (clientId: number) => {
   activePopMenuId.value = activePopMenuId.value === clientId ? null : clientId
+}
+
+const handleClientClick = async (clientId: number) => {
+  if (activeClientId.value === clientId) {
+    activeClientId.value = null
+    return
+  }
+
+  isLoadingVehicles.value = true
+  try {
+    await vehicleStore.getVehicleByClientId(clientId)
+    activeClientId.value = clientId
+  } finally {
+    isLoadingVehicles.value = false
+  }
 }
 </script>
 
@@ -156,6 +186,7 @@ const togglePopMenu = (clientId: number) => {
 }
 
 .client-card__name {
+  min-width: 320px;
   display: flex;
   align-items: center;
   gap: 10px;

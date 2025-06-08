@@ -33,6 +33,17 @@ export class VehicleService {
     }
   }
 
+  static async getVehicleByClientId(clientId: number) {
+    try {
+      const response = await axiosInstance.get<VehicleResponse[]>(
+        `${API_URL}?owner_id=${clientId}`
+      )
+      return response.data
+    } catch (error) {
+      throw new Error('Произошла ошибка при получении автомобиля по клиенту')
+    }
+  }
+
   static async createVehicle(vehicle: CreateVehicleDto) {
     try {
       const formData = new FormData()

@@ -119,7 +119,6 @@ const togglePopMenu = (workerId: number) => {
   padding: 12px;
   background-color: #22293f;
   border-radius: 12px;
-  cursor: pointer;
 
   img {
     width: 30px;

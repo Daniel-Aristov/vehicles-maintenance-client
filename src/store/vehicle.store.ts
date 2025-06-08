@@ -30,6 +30,10 @@ export const useVehicleStore = defineStore('vehicle', {
       const vehicles = await VehicleService.getVehiclesByOwnerId(ownerId)
       this.vehicles = vehicles
     },
+    async getVehicleByClientId(clientId: number) {
+      const vehicle = await VehicleService.getVehicleByClientId(clientId)
+      this.vehicles = vehicle
+    },
     async createVehicle(vehicle: CreateVehicleDto) {
       try {
         const userStore = useUserStore()
