@@ -15,13 +15,11 @@ export interface User {
 export enum UserRole {
   OWNER,
   WORKER,
-  MANAGER,
-  ADMIN
+  MANAGER
 }
 
 export const USER_ROLE_NAMES: Record<UserRole, string> = {
   [UserRole.OWNER]: 'owner',
   [UserRole.WORKER]: 'worker',
-  [UserRole.MANAGER]: 'manager',
-  [UserRole.ADMIN]: 'admin'
+  [UserRole.MANAGER]: 'manager'
 }

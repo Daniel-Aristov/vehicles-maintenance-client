@@ -95,7 +95,7 @@
             <PasswordIcon color="#858585" />
             <span>Роли</span>
           </p>
-          <p class="profile-view__card-body-item-value">
+          <p class="profile-view__card-body-item-value roles-list">
             {{ formatRoles(currentUser?.roles) }}
           </p>
         </div>
@@ -115,6 +115,7 @@ import { defineComponent } from 'vue'
 import { mapStores } from 'pinia'
 import { useUserStore } from '@/store/user.store'
 import { useAuthStore } from '@/store/auth.store'
+import { useServicesStore } from '@/store/services.store'
 import EditProfileModal from '@/components/profile/EditProfileModal.vue'
 import { UpdateUserDto } from '@/js/models/user.dto'
 import PersonIcon from '@/components/icons/PersonIcon.vue'
@@ -139,7 +140,7 @@ export default defineComponent({
   props: {},
   emits: [],
   computed: {
-    ...mapStores(useUserStore, useAuthStore),
+    ...mapStores(useUserStore, useAuthStore, useServicesStore),
     currentUser() {
       return this.userStore.user
     }
@@ -153,7 +154,30 @@ export default defineComponent({
     },
     formatRoles(roles?: string[]): string {
       if (!roles?.length) return 'Не указано'
-      return roles.join(', ')
+
+      const formattedRoles: string[] = []
+
+      if (roles.includes('owner')) {
+        formattedRoles.push('Автовладелец')
+      }
+
+      if (roles.includes('manager')) {
+        const managerServices =
+          this.servicesStore.getServiceNamesByRole('manager')
+        managerServices.forEach((serviceName) => {
+          formattedRoles.push(`Владелец сервиса "${serviceName}"`)
+        })
+      }
+
+      if (roles.includes('worker')) {
+        const workerServices =
+          this.servicesStore.getServiceNamesByRole('worker')
+        workerServices.forEach((serviceName) => {
+          formattedRoles.push(`Работник сервиса "${serviceName}"`)
+        })
+      }
+
+      return formattedRoles.join('\n')
     },
     goToServices() {
       this.$router.push('/services')
@@ -175,6 +199,16 @@ export default defineComponent({
       } finally {
         this.isUploading = false
         ;(event.target as HTMLInputElement).value = ''
+      }
+    }
+  },
+  async mounted() {
+    if (this.currentUser) {
+      if (this.currentUser.roles.includes('manager')) {
+        await this.servicesStore.getServicesWithCurrentManager()
+      }
+      if (this.currentUser.roles.includes('worker')) {
+        await this.servicesStore.getServicesWithCurrentWorker()
       }
     }
   }
@@ -277,6 +311,10 @@ export default defineComponent({
 .profile-view__card-body-item-value {
   font-size: 16px;
   font-weight: 600;
+
+  &.roles-list {
+    white-space: pre-line;
+  }
 }
 
 .profile-view__buttons {

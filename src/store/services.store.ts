@@ -29,7 +29,17 @@ export const useServicesStore = defineStore('services', {
     getAllServices: (state) => state.allServices,
     getManagerServices: (state) => state.servicesWithCurrentManager,
     getWorkerServices: (state) => state.servicesWithCurrentWorker,
-    getClientServices: (state) => state.servicesWithCurrentClient
+    getClientServices: (state) => state.servicesWithCurrentClient,
+    getServiceNamesByRole: (state) => (role: string) => {
+      switch (role) {
+        case 'manager':
+          return state.servicesWithCurrentManager.map((service) => service.name)
+        case 'worker':
+          return state.servicesWithCurrentWorker.map((service) => service.name)
+        default:
+          return []
+      }
+    }
   },
   actions: {
     async getServices() {
