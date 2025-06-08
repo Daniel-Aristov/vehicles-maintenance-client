@@ -71,6 +71,7 @@
       <ServiceWorkersList
         :service-id="Number(route.params.id)"
         :is-service-manager="isServiceManager"
+        :is-service-client="isServiceClient"
       />
     </div>
 

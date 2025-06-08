@@ -155,4 +155,19 @@ export class ServiceService {
       throw new Error('Произошла ошибка при увольнении работника')
     }
   }
+
+  static async setWorkerRating(
+    serviceId: number,
+    workerId: number,
+    rating: number
+  ) {
+    try {
+      await axiosInstance.post<void>(
+        `${API_URL}/${serviceId}/workers/${workerId}/rate`,
+        { rating: rating }
+      )
+    } catch (error) {
+      throw new Error('Произошла ошибка при установке рейтинга работника')
+    }
+  }
 }

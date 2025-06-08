@@ -23,8 +23,12 @@
           <p class="worker-card__email">{{ worker.email }}</p>
           <p class="worker-card__phone">{{ worker.phone }}</p>
           <p class="worker-card__position">{{ worker.position }}</p>
+          <div class="worker-card__rating">
+            <StarIcon color="#ffc107" />
+            <p>{{ worker.rating }}</p>
+          </div>
           <div
-            v-if="isServiceManager"
+            v-if="isServiceManager || isServiceClient"
             @click.stop="togglePopMenu(worker.id)"
             class="worker-card__pop-menu"
           >
@@ -34,7 +38,8 @@
             <PopMenu
               :is-open="activePopMenuId === worker.id"
               :items="menuItems"
-              @dismiss="handleDismissWorker(worker.id)"
+              @dismiss="() => handlePopMenuAction('dismiss', worker.id)"
+              @rate="() => handlePopMenuAction('rate', worker.id)"
               @update:is-open="() => (activePopMenuId = null)"
             />
           </div>
@@ -46,6 +51,11 @@
       @close="isModalOpen = false"
       @submit="handleInviteWorker"
     />
+    <RateWorkerModal
+      v-if="isRateModalOpen"
+      @close="isRateModalOpen = false"
+      @submit="handleSetRating"
+    />
   </div>
 </template>
 
@@ -56,29 +66,49 @@ import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { useServicesStore } from '@/store/services.store'
 import PopMenuIcon from '@/components/icons/PopMenuIcon.vue'
 import PopMenu from '@/components/common/PopMenu.vue'
+import StarIcon from '@/components/icons/StarIcon.vue'
+import RateWorkerModal from '@/components/services/RateWorkerModal.vue'
 
 const servicesStore = useServicesStore()
 
 const props = defineProps<{
   serviceId: number
   isServiceManager: boolean
+  isServiceClient: boolean
 }>()
 
 const isModalOpen = ref(false)
+const isRateModalOpen = ref(false)
 const activePopMenuId = ref<number | null>(null)
+const selectedWorkerId = ref<number | null>(null)
 
 const workers = computed(() => {
   return servicesStore.serviceWorkers
 })
 
-const menuItems = [
-  {
-    id: 'dismiss',
-    label: 'Уволить',
-    action: 'dismiss',
-    type: 'danger' as const
+const menuItems = computed(() => {
+  const items = []
+
+  if (props.isServiceManager) {
+    items.push({
+      id: 'dismiss',
+      label: 'Уволить',
+      action: 'dismiss',
+      type: 'danger' as const
+    })
   }
-]
+
+  if (props.isServiceClient) {
+    items.push({
+      id: 'rate',
+      label: 'Оценить',
+      action: 'rate',
+      type: 'default' as const
+    })
+  }
+
+  return items
+})
 
 const handleInviteWorker = (data: { email: string; position: string }) => {
   servicesStore.inviteWorker(data, props.serviceId)
@@ -87,6 +117,34 @@ const handleInviteWorker = (data: { email: string; position: string }) => {
 const handleDismissWorker = (workerId: number) => {
   servicesStore.dismissWorker(props.serviceId, workerId)
   activePopMenuId.value = null
+}
+
+const handleRateWorker = (workerId: number) => {
+  selectedWorkerId.value = workerId
+  isRateModalOpen.value = true
+  activePopMenuId.value = null
+}
+
+const handleSetRating = async (rating: number) => {
+  if (selectedWorkerId.value) {
+    await servicesStore.setWorkerRating(
+      props.serviceId,
+      selectedWorkerId.value,
+      rating
+    )
+    await servicesStore.getServiceWorkers(props.serviceId)
+  }
+}
+
+const handlePopMenuAction = (action: string, workerId: number) => {
+  switch (action) {
+    case 'dismiss':
+      handleDismissWorker(workerId)
+      break
+    case 'rate':
+      handleRateWorker(workerId)
+      break
+  }
 }
 
 const togglePopMenu = (workerId: number) => {
@@ -129,6 +187,7 @@ const togglePopMenu = (workerId: number) => {
 }
 
 .worker-card__name {
+  min-width: 320px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -142,6 +201,10 @@ const togglePopMenu = (workerId: number) => {
 .worker-card__phone {
   font-size: 15px;
   color: #d2d2d2;
+}
+
+.worker-card__phone {
+  min-width: 140px;
 }
 
 .worker-card__pop-menu {
@@ -188,10 +251,22 @@ const togglePopMenu = (workerId: number) => {
   color: #858585;
 }
 
+.worker-card__position {
+  min-width: 150px;
+}
+
 .workers-list__items {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.worker-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .worker-card__email,

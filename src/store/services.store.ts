@@ -185,6 +185,13 @@ export const useServicesStore = defineStore('services', {
       } catch (error) {
         throw new Error('Произошла ошибка при исключении клиента')
       }
+    },
+    async setWorkerRating(serviceId: number, workerId: number, rating: number) {
+      try {
+        await ServiceService.setWorkerRating(serviceId, workerId, rating)
+      } catch (error) {
+        throw new Error('Произошла ошибка при установке рейтинга работника')
+      }
     }
   }
 })
