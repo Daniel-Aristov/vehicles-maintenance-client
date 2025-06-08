@@ -20,10 +20,6 @@
               </p>
             </div>
             <p class="vehicle-detail__header-text">
-              <span>Модельный ряд: </span>
-              {{ vehicle?.range.name }}
-            </p>
-            <p class="vehicle-detail__header-text">
               <span>VIN: </span>
               {{ vehicle?.vin }}
             </p>
@@ -48,16 +44,18 @@
         <div class="vehicle-detail__header-card-info">
           <p class="vehicle-detail__header-card-info-title">Поколение</p>
           <div class="vehicle-detail__header-card-info-text-container">
-            <p>Полное название: {{ vehicle?.generation.full_name }}</p>
-            <p>{{ vehicle?.generation.short_name }}</p>
+            <p>
+              {{ vehicle?.generation.full_name }},
+              {{ vehicle?.generation.short_name }}
+            </p>
           </div>
         </div>
         <div class="vehicle-detail__header-card-info">
           <p class="vehicle-detail__header-card-info-title">Конфигурация</p>
           <div class="vehicle-detail__header-card-info-text-container">
-            <p>Мощность двигателя: {{ vehicle?.configuration.engine_power }}</p>
             <p>
-              Двигатель: {{ vehicle?.configuration.engine_capacity }} л.
+              Двигатель: {{ vehicle?.configuration.engine_power }} л.с.,
+              {{ vehicle?.configuration.engine_capacity }} л.,
               {{ vehicle?.configuration.engine_type }}
             </p>
             <p>Коробка передач: {{ vehicle?.configuration.transmission }}</p>
@@ -175,7 +173,7 @@ const handleChangeOwner = (data: { email: string }) => {
   border-radius: 12px;
   padding: 18px 24px;
   width: 360px;
-  height: 145px;
+  height: 120px;
 }
 
 .vehicle-detail__header-card-info-text-container {

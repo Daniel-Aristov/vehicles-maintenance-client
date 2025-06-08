@@ -59,7 +59,7 @@ const generationOptions = computed(() => {
 const configurationOptions = computed(() => {
   return vehicleStore.configurations.map((configuration) => ({
     value: configuration.id,
-    label: `${configuration.engine_capacity}л ${configuration.engine_power}л.с. ${configuration.transmission}`
+    label: `${configuration.engine_power} л.с., ${configuration.engine_type}, ${configuration.engine_capacity} л., ${configuration.transmission}, ${configuration.drive}`
   }))
 })
 
